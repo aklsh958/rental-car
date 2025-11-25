@@ -35,7 +35,7 @@ export default function CatalogPage() {
   return (
     <main className={styles.catalogPage}>
       <div className="container">
-        <h1 className={styles.pageTitle}>Каталог автомобілів</h1>
+        <h1 className={styles.pageTitle}>Catalog</h1>
         
         <Filters />
         

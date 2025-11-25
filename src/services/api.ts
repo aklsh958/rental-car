@@ -28,7 +28,8 @@ export const fetchCars = async (
       params.make = filters.brand;
     }
     if (filters.price && filters.price.trim() !== '') {
-      params.rentalPrice = filters.price;
+      // API might expect price as number or specific format
+      params.rentalPrice = Number(filters.price);
     }
     if (filters.mileageFrom && filters.mileageFrom.trim() !== '') {
       params.mileageFrom = Number(filters.mileageFrom);
@@ -38,8 +39,18 @@ export const fetchCars = async (
     }
 
     console.log('Fetching cars with params:', params);
+    console.log('Full URL:', `${API_BASE_URL}/api/cars`);
+    
     const response = await api.get('/api/cars', { params });
-    console.log('API response:', response.data);
+    
+    console.log('API response status:', response.status);
+    console.log('API response headers:', response.headers);
+    console.log('API response data:', response.data);
+    console.log('API response data type:', typeof response.data);
+    console.log('Is array?', Array.isArray(response.data));
+    if (response.data && typeof response.data === 'object') {
+      console.log('Response data keys:', Object.keys(response.data));
+    }
     
     // Handle different response formats
     if (Array.isArray(response.data)) {

@@ -1,0 +1,42 @@
+.header {
+  background: white;
+  border-bottom: 1px solid rgba(18, 20, 23, 0.1);
+  padding: 20px 0;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #3470ff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav {
+  display: flex;
+  gap: 32px;
+}
+
+.navLink {
+  font-size: 1rem;
+  color: rgba(18, 20, 23, 0.5);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.navLink:hover {
+  color: #3470ff;
+}
+
+.navLink.active {
+  color: #3470ff;
+  font-weight: 500;
+}
+

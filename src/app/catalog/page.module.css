@@ -4,11 +4,10 @@
 }
 
 .pageTitle {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 600;
   margin-bottom: 2rem;
-  color: #212529;
-  text-align: center;
+  color: #121417;
 }
 
 .carsGrid {

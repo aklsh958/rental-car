@@ -57,7 +57,7 @@ export default function CarCard({ car }: CarCardProps) {
       <div className={styles.carInfo}>
         <div className={styles.carHeader}>
           <h3 className={styles.carTitle}>
-            {car.make} <span className={styles.carModel}>{car.model}</span>, {car.year}
+            {car.make} {car.model}, {car.year}
           </h3>
           <p className={styles.carPrice}>{car.rentalPrice}</p>
         </div>
@@ -66,15 +66,19 @@ export default function CarCard({ car }: CarCardProps) {
           <span className={styles.carDetail}>
             {car.address.split(',')[1]?.trim() || car.address.split(',')[0]?.trim()}
           </span>
+          <span className={styles.separator}>|</span>
           <span className={styles.carDetail}>
-            {car.address.split(',')[2]?.trim() || car.rentalCompany}
+            {car.address.split(',')[2]?.trim() || 'Ukraine'}
           </span>
+          <span className={styles.separator}>|</span>
+          <span className={styles.carDetail}>
+            {car.rentalCompany}
+          </span>
+          <span className={styles.separator}>|</span>
           <span className={styles.carDetail}>
             {car.type}
           </span>
-          <span className={styles.carDetail}>
-            {car.model}
-          </span>
+          <span className={styles.separator}>|</span>
           <span className={styles.carDetail}>
             {formatMileage(car.mileage)} km
           </span>

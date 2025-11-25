@@ -8,12 +8,11 @@ export default function HomePage() {
     <main className={styles.homePage}>
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>RentalCar</h1>
+          <h1 className={styles.heroTitle}>
+            Find your perfect rental car
+          </h1>
           <p className={styles.heroSubtitle}>
-            Знайдіть ідеальний автомобіль для вашої подорожі
-          </p>
-          <p className={styles.heroDescription}>
-            Широкий вибір автомобілів для оренди на будь-який смак та бюджет
+            Reliable and budget-friendly rentals for any journey
           </p>
           <Link href="/catalog" className={styles.ctaButton}>
             View Catalog

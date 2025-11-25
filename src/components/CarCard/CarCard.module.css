@@ -76,10 +76,6 @@
   line-height: 1.5;
 }
 
-.carModel {
-  color: #3470ff;
-}
-
 .carPrice {
   font-size: 1rem;
   font-weight: 500;
@@ -89,26 +85,22 @@
 .carDetails {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 12px;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 8px;
+  font-size: 0.75rem;
+  color: rgba(18, 20, 23, 0.5);
 }
 
 .carDetail {
   font-size: 0.75rem;
   color: rgba(18, 20, 23, 0.5);
-  position: relative;
-  padding-right: 6px;
 }
 
-.carDetail:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1px;
-  height: 16px;
-  background: rgba(18, 20, 23, 0.1);
+.separator {
+  font-size: 0.75rem;
+  color: rgba(18, 20, 23, 0.2);
+  margin: 0 2px;
 }
 
 .readMoreButton {
