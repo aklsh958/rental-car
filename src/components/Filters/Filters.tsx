@@ -83,7 +83,7 @@ export default function Filters() {
       <div className={styles.filtersGrid}>
         <div className={styles.filterGroup}>
           <label htmlFor="brand" className={styles.filterLabel}>
-            Car brand
+            Марка автомобіля
           </label>
           <select
             id="brand"
@@ -91,7 +91,7 @@ export default function Filters() {
             onChange={(e) => handleFilterChange('brand', e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">Choose a brand</option>
+            <option value="">Виберіть марку</option>
             {brands.map((brand) => (
               <option key={brand} value={brand}>
                 {brand}
@@ -102,7 +102,7 @@ export default function Filters() {
 
         <div className={styles.filterGroup}>
           <label htmlFor="price" className={styles.filterLabel}>
-            Price/1 hour
+            Ціна за 1 годину
           </label>
           <select
             id="price"
@@ -110,7 +110,7 @@ export default function Filters() {
             onChange={(e) => handleFilterChange('price', e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">Choose a price</option>
+            <option value="">До $</option>
             {PRICE_OPTIONS.filter(opt => opt.value).map((option) => (
               <option key={option.value} value={option.value}>
                 {option.value}
@@ -121,7 +121,7 @@ export default function Filters() {
 
         <div className={styles.filterGroup}>
           <label htmlFor="mileageFrom" className={styles.filterLabel}>
-            Car mileage/km
+            Пробіг / км
           </label>
           <div className={styles.mileageInputs}>
             <input
@@ -129,7 +129,7 @@ export default function Filters() {
               type="number"
               value={localFilters.mileageFrom}
               onChange={(e) => handleFilterChange('mileageFrom', e.target.value)}
-              placeholder="From"
+              placeholder="Від"
               className={styles.filterInput}
               min="0"
             />
@@ -138,7 +138,7 @@ export default function Filters() {
               type="number"
               value={localFilters.mileageTo}
               onChange={(e) => handleFilterChange('mileageTo', e.target.value)}
-              placeholder="To"
+              placeholder="До"
               className={styles.filterInput}
               min="0"
             />
@@ -148,7 +148,7 @@ export default function Filters() {
 
       <div className={styles.filterActions}>
         <button onClick={handleSearch} className={styles.searchButton}>
-          Search
+          Пошук
         </button>
         <button onClick={handleReset} className={styles.resetButton}>
           Скинути

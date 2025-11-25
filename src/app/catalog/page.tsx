@@ -35,7 +35,7 @@ export default function CatalogPage() {
   return (
     <main className={styles.catalogPage}>
       <div className="container">
-        <h1 className={styles.pageTitle}>Catalog</h1>
+        <h1 className={styles.pageTitle}>Каталог</h1>
         
         <Filters />
         
@@ -60,7 +60,7 @@ export default function CatalogPage() {
                   disabled={isLoading}
                   className={styles.loadMoreButton}
                 >
-                  {isLoading ? 'Завантаження...' : 'Load More'}
+                  {isLoading ? 'Завантаження...' : 'Завантажити ще'}
                 </button>
               </div>
             )}

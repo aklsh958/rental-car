@@ -78,7 +78,7 @@ export default function CarCard({ car }: CarCardProps) {
       </div>
       
       <Link href={`/catalog/${car.id}`} className={styles.readMoreButton}>
-        Read more
+        Детальніше
       </Link>
     </article>
   );

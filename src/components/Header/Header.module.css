@@ -13,9 +13,19 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #3470ff;
   text-decoration: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.logoRent {
+  color: #3470ff;
+}
+
+.logoCar {
+  color: #0b44cd;
 }
 
 .nav {
