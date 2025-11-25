@@ -53,6 +53,7 @@ export default function CarDetailsPage() {
   return (
     <main className={styles.carDetailsPage}>
       <div className="container">
+        <h1 className={styles.pageTitle}>Details</h1>
         <CarDetails car={car} />
       </div>
     </main>

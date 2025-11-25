@@ -4,20 +4,29 @@
   gap: 40px;
   max-width: 1400px;
   margin: 0 auto;
+  background: white;
+  padding: 40px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .carImageSection {
   position: relative;
-  grid-column: 1;
-  grid-row: 1 / 3;
   width: 100%;
   min-height: 400px;
+  border-radius: 14px;
+  overflow: hidden;
 }
 
 .carImage {
   width: 100%;
   height: 100%;
-  border-radius: 14px;
   object-fit: cover;
   position: relative !important;
 }
@@ -48,107 +57,23 @@
   background: rgba(52, 112, 255, 0.1);
 }
 
-.carInfoSection {
-  grid-column: 2;
-  grid-row: 1;
-  background: white;
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.carTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 24px;
-  color: #121417;
-}
-
-.carSpecs {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid rgba(18, 20, 23, 0.1);
-}
-
-.specItem {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.specLabel {
-  font-size: 0.75rem;
-  color: rgba(18, 20, 23, 0.5);
-}
-
-.specValue {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #121417;
-}
-
-.description,
-.accessories,
-.functionalities,
-.rentalConditions {
-  margin-bottom: 24px;
-}
-
-.sectionTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #121417;
-}
-
-.description p {
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: rgba(18, 20, 23, 0.8);
-}
-
-.accessoriesList,
-.functionalitiesList {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.accessoriesList li,
-.functionalitiesList li {
-  font-size: 0.875rem;
-  padding: 6px 12px;
-  background: #f7f7fb;
-  border-radius: 35px;
-  color: #363535;
-}
-
-.conditionsText {
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: rgba(18, 20, 23, 0.8);
-  white-space: pre-line;
-}
-
 .rentalFormSection {
-  grid-column: 2;
-  grid-row: 2;
   background: white;
   padding: 24px;
   border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .formTitle {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   color: #121417;
+}
+
+.formSubtitle {
+  font-size: 0.875rem;
+  color: rgba(18, 20, 23, 0.5);
+  margin-bottom: 24px;
 }
 
 .rentalForm {
@@ -177,7 +102,7 @@
   font-size: 1rem;
   font-family: inherit;
   color: #121417;
-  background: #f7f7fb;
+  background: white;
   outline: none;
   transition: all 0.3s ease;
 }
@@ -185,7 +110,6 @@
 .formInput:focus,
 .formTextarea:focus {
   border-color: #3470ff;
-  background: white;
   box-shadow: 0 0 0 2px rgba(52, 112, 255, 0.1);
 }
 
@@ -240,24 +164,133 @@
   }
 }
 
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.carHeader {
+  margin-bottom: 8px;
+}
+
+.carTitleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.carTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #121417;
+  margin: 0;
+}
+
+.carId {
+  font-size: 0.875rem;
+  color: rgba(18, 20, 23, 0.5);
+}
+
+.carLocation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #121417;
+  margin-bottom: 8px;
+}
+
+.locationIcon {
+  color: rgba(18, 20, 23, 0.5);
+}
+
+.carMileage {
+  font-size: 0.875rem;
+  color: #121417;
+  margin-bottom: 16px;
+}
+
+.carPrice {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #3470ff;
+  margin-bottom: 24px;
+}
+
+.description {
+  margin-bottom: 24px;
+}
+
+.description p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgba(18, 20, 23, 0.8);
+}
+
+.rentalConditions,
+.carSpecifications,
+.accessoriesSection {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #121417;
+}
+
+.conditionsList,
+.featuresList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.conditionsList li,
+.featuresList li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #121417;
+}
+
+.checkIcon {
+  flex-shrink: 0;
+}
+
+.specsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.specItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #121417;
+}
+
+.specIcon {
+  color: rgba(18, 20, 23, 0.5);
+  flex-shrink: 0;
+}
+
 @media (max-width: 1024px) {
   .carDetails {
     grid-template-columns: 1fr;
+    padding: 24px;
   }
   
-  .carImageSection {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  
-  .carInfoSection {
-    grid-column: 1;
-    grid-row: 2;
-  }
-  
-  .rentalFormSection {
-    grid-column: 1;
-    grid-row: 3;
+  .specsGrid {
+    grid-template-columns: 1fr;
   }
 }
-

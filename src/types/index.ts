@@ -15,7 +15,7 @@ export interface Car {
   rentalPrice: string;
   rentalCompany: string;
   address: string;
-  rentalConditions: string;
+  rentalConditions: string | string[];
   mileage: number;
 }
 

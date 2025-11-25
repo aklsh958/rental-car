@@ -1,6 +1,14 @@
 .carDetailsPage {
   min-height: 100vh;
   padding: 40px 0;
+  background-color: #f8f9fa;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #121417;
 }
 
 .notFound {

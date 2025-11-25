@@ -19,9 +19,22 @@ export default function CarDetails({ car }: CarDetailsProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
-    message: '',
+    bookingDate: '',
+    comment: '',
   });
+
+  // Parse rental conditions - API returns array or string
+  const rentalConditions = Array.isArray(car.rentalConditions)
+    ? car.rentalConditions
+    : typeof car.rentalConditions === 'string'
+    ? car.rentalConditions.split('\n').filter((line) => line.trim())
+    : [];
+
+  // Combine accessories and functionalities
+  const allFeatures = [
+    ...(car.accessories || []),
+    ...(car.functionalities || []),
+  ];
 
   const handleFavoriteClick = () => {
     if (isFavorite) {
@@ -47,16 +60,16 @@ export default function CarDetails({ car }: CarDetailsProps) {
         carId: car.id,
         name: formData.name,
         email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
+        phone: '', // Not in form but required by API
+        message: formData.comment,
       });
 
       setShowNotification(true);
       setFormData({
         name: '',
         email: '',
-        phone: '',
-        message: '',
+        bookingDate: '',
+        comment: '',
       });
 
       setTimeout(() => {
@@ -70,197 +83,285 @@ export default function CarDetails({ car }: CarDetailsProps) {
     }
   };
 
+  // Extract city and country from address
+  const addressParts = car.address.split(',');
+  const city = addressParts[1]?.trim() || addressParts[0]?.trim() || '';
+  const country = addressParts[2]?.trim() || 'Ukraine';
+
+  // Extract ID from car (might be in different format)
+  const carId = car.id.split('-')[0] || car.id.substring(0, 4);
+
   return (
     <div className={styles.carDetails}>
-      <div className={styles.carImageSection}>
-        <Image
-          src={car.img || '/placeholder-car.jpg'}
-          alt={`${car.make} ${car.model}`}
-          fill
-          className={styles.carImage}
-          sizes="(max-width: 1024px) 100vw, 50vw"
-        />
-        <button
-          onClick={handleFavoriteClick}
-          className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
-          aria-label={isFavorite ? 'Видалити з обраних' : 'Додати до обраних'}
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill={isFavorite ? '#3470ff' : 'none'}
-            stroke={isFavorite ? '#3470ff' : 'currentColor'}
-            strokeWidth="2"
+      {/* Left Section - Image and Form */}
+      <div className={styles.leftSection}>
+        <div className={styles.carImageSection}>
+          <Image
+            src={car.img || '/placeholder-car.jpg'}
+            alt={`${car.make} ${car.model}`}
+            fill
+            className={styles.carImage}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
+          <button
+            onClick={handleFavoriteClick}
+            className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
+            aria-label={isFavorite ? 'Видалити з обраних' : 'Додати до обраних'}
           >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-          </svg>
-        </button>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill={isFavorite ? '#3470ff' : 'none'}
+              stroke={isFavorite ? '#3470ff' : 'currentColor'}
+              strokeWidth="2"
+            >
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+          </button>
+        </div>
+
+        <div className={styles.rentalFormSection}>
+          <h2 className={styles.formTitle}>Book your car now</h2>
+          <p className={styles.formSubtitle}>
+            Stay connected! We are always ready to help you.
+          </p>
+          <form onSubmit={handleSubmit} className={styles.rentalForm}>
+            <div className={styles.formGroup}>
+              <label htmlFor="name" className={styles.formLabel}>
+                Name*
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                className={styles.formInput}
+                placeholder="Name*"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="email" className={styles.formLabel}>
+                Email*
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className={styles.formInput}
+                placeholder="Email*"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="bookingDate" className={styles.formLabel}>
+                Booking date
+              </label>
+              <input
+                type="date"
+                id="bookingDate"
+                name="bookingDate"
+                value={formData.bookingDate}
+                onChange={handleInputChange}
+                className={styles.formInput}
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="comment" className={styles.formLabel}>
+                Comment
+              </label>
+              <textarea
+                id="comment"
+                name="comment"
+                value={formData.comment}
+                onChange={handleInputChange}
+                rows={4}
+                className={styles.formTextarea}
+                placeholder="Comment"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={styles.submitButton}
+            >
+              {isSubmitting ? 'Sending...' : 'Send'}
+            </button>
+          </form>
+
+          {showNotification && (
+            <div className={styles.notification}>
+              <p>✅ Booking successful! We will contact you soon.</p>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className={styles.carInfoSection}>
-        <h1 className={styles.carTitle}>
-          {car.make} {car.model}, {car.year}
-        </h1>
-
-        <div className={styles.carSpecs}>
-          <div className={styles.specItem}>
-            <span className={styles.specLabel}>Місто:</span>
-            <span className={styles.specValue}>
-              {car.address.split(',')[1]?.trim() || car.address.split(',')[0]?.trim()}
-            </span>
-          </div>
-          <div className={styles.specItem}>
-            <span className={styles.specLabel}>Країна:</span>
-            <span className={styles.specValue}>
-              {car.address.split(',')[2]?.trim() || car.rentalCompany}
-            </span>
-          </div>
-          <div className={styles.specItem}>
-            <span className={styles.specLabel}>Тип:</span>
-            <span className={styles.specValue}>{car.type}</span>
-          </div>
-          <div className={styles.specItem}>
-            <span className={styles.specLabel}>Модель:</span>
-            <span className={styles.specValue}>{car.model}</span>
-          </div>
-          <div className={styles.specItem}>
-            <span className={styles.specLabel}>Пробіг:</span>
-            <span className={styles.specValue}>
-              {formatMileage(car.mileage)} km
-            </span>
-          </div>
-          <div className={styles.specItem}>
-            <span className={styles.specLabel}>Витрата палива:</span>
-            <span className={styles.specValue}>{car.fuelConsumption}</span>
-          </div>
-          <div className={styles.specItem}>
-            <span className={styles.specLabel}>Об&apos;єм двигуна:</span>
-            <span className={styles.specValue}>{car.engineSize}</span>
-          </div>
-          <div className={styles.specItem}>
-            <span className={styles.specLabel}>Ціна:</span>
-            <span className={styles.specValue}>{car.rentalPrice}</span>
+      {/* Right Section - Car Info */}
+      <div className={styles.rightSection}>
+        <div className={styles.carHeader}>
+          <div className={styles.carTitleRow}>
+            <h1 className={styles.carTitle}>
+              {car.make} {car.model}, {car.year}
+            </h1>
+            <span className={styles.carId}>Id: {carId}</span>
           </div>
         </div>
 
+        <div className={styles.carLocation}>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className={styles.locationIcon}
+          >
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          <span>{city}, {country}</span>
+        </div>
+
+        <div className={styles.carMileage}>
+          Mileage: {formatMileage(car.mileage)} km
+        </div>
+
+        <div className={styles.carPrice}>{car.rentalPrice}</div>
+
         <div className={styles.description}>
-          <h2 className={styles.sectionTitle}>Опис</h2>
           <p>{car.description}</p>
         </div>
 
-        {car.accessories && car.accessories.length > 0 && (
-          <div className={styles.accessories}>
-            <h2 className={styles.sectionTitle}>Аксесуари:</h2>
-            <ul className={styles.accessoriesList}>
-              {car.accessories.map((accessory, index) => (
-                <li key={index}>{accessory}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {car.functionalities && car.functionalities.length > 0 && (
-          <div className={styles.functionalities}>
-            <h2 className={styles.sectionTitle}>Функції:</h2>
-            <ul className={styles.functionalitiesList}>
-              {car.functionalities.map((functionality, index) => (
-                <li key={index}>{functionality}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {car.rentalConditions && (
+        {rentalConditions.length > 0 && (
           <div className={styles.rentalConditions}>
-            <h2 className={styles.sectionTitle}>Умови оренди:</h2>
-            <p className={styles.conditionsText}>{car.rentalConditions}</p>
+            <h2 className={styles.sectionTitle}>Rental Conditions:</h2>
+            <ul className={styles.conditionsList}>
+              {rentalConditions.map((condition, index) => (
+                <li key={index}>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10b981"
+                    strokeWidth="2"
+                    className={styles.checkIcon}
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  {condition}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
-      </div>
 
-      <div className={styles.rentalFormSection}>
-        <h2 className={styles.formTitle}>Оренда автомобіля</h2>
-        <form onSubmit={handleSubmit} className={styles.rentalForm}>
-          <div className={styles.formGroup}>
-            <label htmlFor="name" className={styles.formLabel}>
-              Ім&apos;я *
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-              className={styles.formInput}
-              placeholder="Введіть ваше ім'я"
-            />
+        <div className={styles.carSpecifications}>
+          <h2 className={styles.sectionTitle}>Car Specifications:</h2>
+          <div className={styles.specsGrid}>
+            <div className={styles.specItem}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className={styles.specIcon}
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>Year: {car.year}</span>
+            </div>
+            <div className={styles.specItem}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className={styles.specIcon}
+              >
+                <path d="M5 18H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2" />
+                <path d="M19 18h2a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-2" />
+                <rect x="7" y="14" width="10" height="6" rx="1" />
+              </svg>
+              <span>Type: {car.type}</span>
+            </div>
+            <div className={styles.specItem}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className={styles.specIcon}
+              >
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+              <span>Fuel Consumption: {car.fuelConsumption}</span>
+            </div>
+            <div className={styles.specItem}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className={styles.specIcon}
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+              <span>Engine Size: {car.engineSize}</span>
+            </div>
           </div>
+        </div>
 
-          <div className={styles.formGroup}>
-            <label htmlFor="email" className={styles.formLabel}>
-              Email *
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              className={styles.formInput}
-              placeholder="Введіть ваш email"
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="phone" className={styles.formLabel}>
-              Телефон *
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              required
-              className={styles.formInput}
-              placeholder="Введіть ваш телефон"
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="message" className={styles.formLabel}>
-              Повідомлення
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              rows={4}
-              className={styles.formTextarea}
-              placeholder="Додаткові побажання (необов'язково)"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={styles.submitButton}
-          >
-            {isSubmitting ? 'Відправка...' : 'Орендувати'}
-          </button>
-        </form>
-
-        {showNotification && (
-          <div className={styles.notification}>
-            <p>✅ Оренду успішно оформлено! Ми зв&apos;яжемося з вами найближчим часом.</p>
+        {allFeatures.length > 0 && (
+          <div className={styles.accessoriesSection}>
+            <h2 className={styles.sectionTitle}>
+              Accessories and functionalities:
+            </h2>
+            <ul className={styles.featuresList}>
+              {allFeatures.map((feature, index) => (
+                <li key={index}>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10b981"
+                    strokeWidth="2"
+                    className={styles.checkIcon}
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>
     </div>
   );
 }
-
