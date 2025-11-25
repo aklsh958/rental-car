@@ -5,6 +5,9 @@ const API_BASE_URL = 'https://car-rental-api.goit.global';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // Format mileage with spaces (5000 -> 5 000)
@@ -24,41 +27,94 @@ export const fetchCars = async (
     };
 
     // Add filters to params if they exist and are not empty
+    // Try different parameter names that API might expect
     if (filters.brand && filters.brand.trim() !== '') {
       params.make = filters.brand;
+      // Also try alternative names
+      // params.brand = filters.brand;
+      // params.manufacturer = filters.brand;
     }
     if (filters.price && filters.price.trim() !== '') {
-      // API might expect price as number or specific format
-      params.rentalPrice = Number(filters.price);
+      const priceNum = Number(filters.price);
+      params.rentalPrice = priceNum;
+      // Also try alternative names
+      // params.price = priceNum;
+      // params.maxPrice = priceNum;
     }
     if (filters.mileageFrom && filters.mileageFrom.trim() !== '') {
       params.mileageFrom = Number(filters.mileageFrom);
+      // Also try alternative names
+      // params.minMileage = Number(filters.mileageFrom);
     }
     if (filters.mileageTo && filters.mileageTo.trim() !== '') {
       params.mileageTo = Number(filters.mileageTo);
+      // Also try alternative names
+      // params.maxMileage = Number(filters.mileageTo);
     }
 
     console.log('Fetching cars with params:', params);
-    console.log('Full URL:', `${API_BASE_URL}/api/cars`);
     
-    const response = await api.get('/api/cars', { params });
-    
-    console.log('API response status:', response.status);
-    console.log('API response headers:', response.headers);
-    console.log('API response data:', response.data);
-    console.log('API response data type:', typeof response.data);
-    console.log('Is array?', Array.isArray(response.data));
-    if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
-      console.log('Response data keys:', Object.keys(response.data));
-      console.log('Response data structure:', {
-        hasData: !!response.data.data,
-        hasCars: !!response.data.cars,
-        hasItems: !!response.data.items,
-        hasResults: !!response.data.results,
-        total: response.data.total,
-        count: response.data.count,
-      });
+    // Try different endpoints - API might use /cars instead of /api/cars
+    let response;
+    try {
+      // First try /api/cars
+      console.log('Trying /api/cars');
+      response = await api.get('/api/cars', { params });
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        // If 404, try /cars
+        console.log('404 on /api/cars, trying /cars');
+        try {
+          response = await api.get('/cars', { params });
+        } catch (error2: any) {
+          if (error2.response?.status === 404) {
+            // Try root endpoint
+            console.log('404 on /cars, trying root');
+            response = await api.get('/', { params });
+          } else {
+            throw error2;
+          }
+        }
+      } else {
+        throw error;
+      }
     }
+    
+    console.log('Full URL:', response.config.url);
+    
+    console.log('=== API RESPONSE DEBUG ===');
+    console.log('Status:', response.status);
+    console.log('Full response:', response);
+    console.log('Response data:', response.data);
+    console.log('Response data type:', typeof response.data);
+    console.log('Is array?', Array.isArray(response.data));
+    
+    if (response.data) {
+      if (typeof response.data === 'object' && !Array.isArray(response.data)) {
+        console.log('Response data keys:', Object.keys(response.data));
+        console.log('Response data structure:', {
+          hasData: !!response.data.data,
+          hasCars: !!response.data.cars,
+          hasItems: !!response.data.items,
+          hasResults: !!response.data.results,
+          hasRecords: !!response.data.records,
+          total: response.data.total,
+          count: response.data.count,
+          length: response.data.length,
+        });
+        
+        // Log full structure
+        console.log('Full response.data:', JSON.stringify(response.data, null, 2));
+      } else if (Array.isArray(response.data)) {
+        console.log('Response is array, length:', response.data.length);
+        if (response.data.length > 0) {
+          console.log('First item:', response.data[0]);
+        }
+      }
+    } else {
+      console.warn('Response data is null or undefined!');
+    }
+    console.log('=== END DEBUG ===');
     
     // API typically returns data in format: { data: [...], total: number }
     // or directly as array
@@ -126,7 +182,15 @@ export const submitRental = async (data: {
   message?: string;
 }): Promise<void> => {
   try {
-    await api.post('/api/rentals', data);
+    try {
+      await api.post('/api/rentals', data);
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        await api.post('/rentals', data);
+      } else {
+        throw error;
+      }
+    }
   } catch (error) {
     console.error('Error submitting rental:', error);
     throw error;
