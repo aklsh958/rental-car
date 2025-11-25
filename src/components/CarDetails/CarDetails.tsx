@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useCarsStore } from '@/store/carsStore';
 import { Car } from '@/types';
 import { formatMileage, submitRental } from '@/services/api';
@@ -72,10 +73,12 @@ export default function CarDetails({ car }: CarDetailsProps) {
   return (
     <div className={styles.carDetails}>
       <div className={styles.carImageSection}>
-        <img
+        <Image
           src={car.img || '/placeholder-car.jpg'}
           alt={`${car.make} ${car.model}`}
+          fill
           className={styles.carImage}
+          sizes="(max-width: 1024px) 100vw, 50vw"
         />
         <button
           onClick={handleFavoriteClick}
@@ -132,7 +135,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
             <span className={styles.specValue}>{car.fuelConsumption}</span>
           </div>
           <div className={styles.specItem}>
-            <span className={styles.specLabel}>Об\'єм двигуна:</span>
+            <span className={styles.specLabel}>Об&apos;єм двигуна:</span>
             <span className={styles.specValue}>{car.engineSize}</span>
           </div>
           <div className={styles.specItem}>
@@ -181,7 +184,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
         <form onSubmit={handleSubmit} className={styles.rentalForm}>
           <div className={styles.formGroup}>
             <label htmlFor="name" className={styles.formLabel}>
-              Ім'я *
+              Ім&apos;я *
             </label>
             <input
               type="text"
@@ -253,7 +256,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
 
         {showNotification && (
           <div className={styles.notification}>
-            <p>✅ Оренду успішно оформлено! Ми зв'яжемося з вами найближчим часом.</p>
+            <p>✅ Оренду успішно оформлено! Ми зв&apos;яжемося з вами найближчим часом.</p>
           </div>
         )}
       </div>

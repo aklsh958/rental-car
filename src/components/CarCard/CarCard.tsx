@@ -2,6 +2,7 @@
 
 import { useCarsStore } from '@/store/carsStore';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Car } from '@/types';
 import { formatMileage } from '@/services/api';
 import styles from './CarCard.module.css';
@@ -28,10 +29,12 @@ export default function CarCard({ car }: CarCardProps) {
   return (
     <article className={styles.carCard}>
       <div className={styles.imageContainer}>
-        <img
+        <Image
           src={car.img || '/placeholder-car.jpg'}
           alt={`${car.make} ${car.model}`}
+          fill
           className={styles.carImage}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <button
           onClick={handleFavoriteClick}
