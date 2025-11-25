@@ -1,0 +1,21 @@
+.carDetailsPage {
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+.notFound {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.notFound h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #212529;
+}
+
+.notFound p {
+  font-size: 1.1rem;
+}
+
