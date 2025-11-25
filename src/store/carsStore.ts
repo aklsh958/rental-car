@@ -77,6 +77,7 @@ export const useCarsStore = create<CarsStore>()(
         
         try {
           const cars = await fetchCars(currentFilters, page);
+          console.log('Loaded cars:', cars.length, 'with filters:', currentFilters);
           
           set({
             filteredCars: cars,

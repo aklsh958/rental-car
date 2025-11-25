@@ -23,35 +23,48 @@ export const fetchCars = async (
       limit: 12,
     };
 
-    // Add filters to params if they exist
-    if (filters.brand) {
+    // Add filters to params if they exist and are not empty
+    if (filters.brand && filters.brand.trim() !== '') {
       params.make = filters.brand;
     }
-    if (filters.price) {
+    if (filters.price && filters.price.trim() !== '') {
       params.rentalPrice = filters.price;
     }
-    if (filters.mileageFrom) {
-      params.mileageFrom = filters.mileageFrom;
+    if (filters.mileageFrom && filters.mileageFrom.trim() !== '') {
+      params.mileageFrom = Number(filters.mileageFrom);
     }
-    if (filters.mileageTo) {
-      params.mileageTo = filters.mileageTo;
+    if (filters.mileageTo && filters.mileageTo.trim() !== '') {
+      params.mileageTo = Number(filters.mileageTo);
     }
 
+    console.log('Fetching cars with params:', params);
     const response = await api.get('/api/cars', { params });
+    console.log('API response:', response.data);
+    
     // Handle different response formats
     if (Array.isArray(response.data)) {
+      console.log('Returning array directly, count:', response.data.length);
       return response.data;
     }
     if (response.data?.data && Array.isArray(response.data.data)) {
+      console.log('Returning response.data.data, count:', response.data.data.length);
       return response.data.data;
     }
     if (response.data?.cars && Array.isArray(response.data.cars)) {
+      console.log('Returning response.data.cars, count:', response.data.cars.length);
       return response.data.cars;
     }
+    console.warn('Unexpected response format:', response.data);
     return [];
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching cars:', error);
-    throw error;
+    if (error.response) {
+      console.error('Response error:', error.response.status, error.response.data);
+    } else if (error.request) {
+      console.error('Request error:', error.request);
+    }
+    // Return empty array instead of throwing to prevent app crash
+    return [];
   }
 };
 
