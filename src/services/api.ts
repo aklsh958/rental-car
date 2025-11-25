@@ -44,7 +44,21 @@ export const fetchCars = async (
     const response = await api.get('/api/cars', { params });
     
     console.log('API response status:', response.status);
-    console.log('API response data:', JSON.stringify(response.data, null, 2));
+    console.log('API response headers:', response.headers);
+    console.log('API response data:', response.data);
+    console.log('API response data type:', typeof response.data);
+    console.log('Is array?', Array.isArray(response.data));
+    if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
+      console.log('Response data keys:', Object.keys(response.data));
+      console.log('Response data structure:', {
+        hasData: !!response.data.data,
+        hasCars: !!response.data.cars,
+        hasItems: !!response.data.items,
+        hasResults: !!response.data.results,
+        total: response.data.total,
+        count: response.data.count,
+      });
+    }
     
     // API typically returns data in format: { data: [...], total: number }
     // or directly as array
