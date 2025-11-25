@@ -40,7 +40,7 @@ export default function CarCard({ car }: CarCardProps) {
         <button
           onClick={handleFavoriteClick}
           className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
-          aria-label={isFavorite ? 'Видалити з обраних' : 'Додати до обраних'}
+          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
         >
           <HeartIcon filled={isFavorite} />
         </button>
@@ -78,7 +78,7 @@ export default function CarCard({ car }: CarCardProps) {
       </div>
       
       <Link href={`/catalog/${car.id}`} className={styles.readMoreButton}>
-        Детальніше
+        Read more
       </Link>
     </article>
   );

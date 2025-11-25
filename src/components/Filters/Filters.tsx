@@ -6,15 +6,15 @@ import styles from './Filters.module.css';
 
 // Price options
 const PRICE_OPTIONS = [
-  { value: '', label: 'Всі ціни' },
-  { value: '30', label: 'До $30' },
-  { value: '40', label: 'До $40' },
-  { value: '50', label: 'До $50' },
-  { value: '60', label: 'До $60' },
-  { value: '70', label: 'До $70' },
-  { value: '80', label: 'До $80' },
-  { value: '90', label: 'До $90' },
-  { value: '100', label: 'До $100' },
+  { value: '', label: 'All prices' },
+  { value: '30', label: 'Up to $30' },
+  { value: '40', label: 'Up to $40' },
+  { value: '50', label: 'Up to $50' },
+  { value: '60', label: 'Up to $60' },
+  { value: '70', label: 'Up to $70' },
+  { value: '80', label: 'Up to $80' },
+  { value: '90', label: 'Up to $90' },
+  { value: '100', label: 'Up to $100' },
 ];
 
 export default function Filters() {
@@ -83,7 +83,7 @@ export default function Filters() {
       <div className={styles.filtersGrid}>
         <div className={styles.filterGroup}>
           <label htmlFor="brand" className={styles.filterLabel}>
-            Марка автомобіля
+            Car brand
           </label>
           <select
             id="brand"
@@ -91,7 +91,7 @@ export default function Filters() {
             onChange={(e) => handleFilterChange('brand', e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">Виберіть марку</option>
+            <option value="">Enter the text</option>
             {brands.map((brand) => (
               <option key={brand} value={brand}>
                 {brand}
@@ -102,7 +102,7 @@ export default function Filters() {
 
         <div className={styles.filterGroup}>
           <label htmlFor="price" className={styles.filterLabel}>
-            Ціна за 1 годину
+            Price/1 hour
           </label>
           <select
             id="price"
@@ -110,10 +110,9 @@ export default function Filters() {
             onChange={(e) => handleFilterChange('price', e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">До $</option>
-            {PRICE_OPTIONS.filter(opt => opt.value).map((option) => (
+            {PRICE_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.value}
+                {option.label}
               </option>
             ))}
           </select>
@@ -121,7 +120,7 @@ export default function Filters() {
 
         <div className={styles.filterGroup}>
           <label htmlFor="mileageFrom" className={styles.filterLabel}>
-            Пробіг / км
+            Car mileage / km
           </label>
           <div className={styles.mileageInputs}>
             <input
@@ -129,7 +128,7 @@ export default function Filters() {
               type="number"
               value={localFilters.mileageFrom}
               onChange={(e) => handleFilterChange('mileageFrom', e.target.value)}
-              placeholder="Від"
+              placeholder="From"
               className={styles.filterInput}
               min="0"
             />
@@ -138,7 +137,7 @@ export default function Filters() {
               type="number"
               value={localFilters.mileageTo}
               onChange={(e) => handleFilterChange('mileageTo', e.target.value)}
-              placeholder="До"
+              placeholder="To"
               className={styles.filterInput}
               min="0"
             />
@@ -148,10 +147,10 @@ export default function Filters() {
 
       <div className={styles.filterActions}>
         <button onClick={handleSearch} className={styles.searchButton}>
-          Пошук
+          Search
         </button>
         <button onClick={handleReset} className={styles.resetButton}>
-          Скинути
+          Reset
         </button>
       </div>
     </div>

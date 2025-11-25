@@ -12,7 +12,7 @@ export default function Header() {
       <div className="container">
         <div className={styles.headerContent}>
           <Link href="/" className={styles.logo}>
-            <span className={styles.logoRent}>Rent</span>
+            <span className={styles.logoRental}>Rental</span>
             <span className={styles.logoCar}>Car</span>
           </Link>
           <nav className={styles.nav}>
@@ -20,13 +20,13 @@ export default function Header() {
               href="/"
               className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`}
             >
-              Головна
+              Home
             </Link>
             <Link
               href="/catalog"
               className={`${styles.navLink} ${pathname === '/catalog' ? styles.active : ''}`}
             >
-              Каталог
+              Catalog
             </Link>
           </nav>
         </div>

@@ -35,7 +35,7 @@ export default function CatalogPage() {
   return (
     <main className={styles.catalogPage}>
       <div className="container">
-        <h1 className={styles.pageTitle}>Каталог</h1>
+        <h1 className={styles.pageTitle}>Catalog</h1>
         
         <Filters />
         
@@ -43,7 +43,7 @@ export default function CatalogPage() {
           <div className="loader" />
         ) : filteredCars.length === 0 ? (
           <div className={styles.noResults}>
-            <p>Автомобілів не знайдено. Спробуйте змінити фільтри.</p>
+            <p>No cars found. Try changing the filters.</p>
           </div>
         ) : (
           <>
@@ -60,7 +60,7 @@ export default function CatalogPage() {
                   disabled={isLoading}
                   className={styles.loadMoreButton}
                 >
-                  {isLoading ? 'Завантаження...' : 'Завантажити ще'}
+                  {isLoading ? 'Loading...' : 'Load More'}
                 </button>
               </div>
             )}

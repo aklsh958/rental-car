@@ -42,8 +42,8 @@ export default function CarDetailsPage() {
       <main className={styles.carDetailsPage}>
         <div className="container">
           <div className={styles.notFound}>
-            <h2>Автомобіль не знайдено</h2>
-            <p>Спробуйте вибрати інший автомобіль з каталогу.</p>
+            <h2>Car not found</h2>
+            <p>Try selecting another car from the catalog.</p>
           </div>
         </div>
       </main>

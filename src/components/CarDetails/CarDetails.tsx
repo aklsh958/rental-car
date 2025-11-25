@@ -78,7 +78,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
       }, 5000);
     } catch (error) {
       console.error('Error submitting rental:', error);
-      alert('Помилка при відправці форми. Спробуйте ще раз.');
+      alert('Error submitting form. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -107,21 +107,21 @@ export default function CarDetails({ car }: CarDetailsProps) {
           <button
             onClick={handleFavoriteClick}
             className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
-            aria-label={isFavorite ? 'Видалити з обраних' : 'Додати до обраних'}
+            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
           >
             <HeartIcon filled={isFavorite} />
           </button>
         </div>
 
         <div className={styles.rentalFormSection}>
-          <h2 className={styles.formTitle}>Орендуйте автомобіль зараз</h2>
+          <h2 className={styles.formTitle}>Book your car now</h2>
           <p className={styles.formSubtitle}>
-            Залишайтеся на зв&apos;язку! Ми завжди готові вам допомогти.
+            Stay connected! We are always ready to help you.
           </p>
           <form onSubmit={handleSubmit} className={styles.rentalForm}>
             <div className={styles.formGroup}>
               <label htmlFor="name" className={styles.formLabel}>
-                Ім&apos;я*
+                Name*
               </label>
               <input
                 type="text"
@@ -131,13 +131,13 @@ export default function CarDetails({ car }: CarDetailsProps) {
                 onChange={handleInputChange}
                 required
                 className={styles.formInput}
-                placeholder="Ім&apos;я*"
+                placeholder="Name*"
               />
             </div>
 
             <div className={styles.formGroup}>
               <label htmlFor="email" className={styles.formLabel}>
-                Електронна пошта*
+                Email*
               </label>
               <input
                 type="email"
@@ -147,13 +147,13 @@ export default function CarDetails({ car }: CarDetailsProps) {
                 onChange={handleInputChange}
                 required
                 className={styles.formInput}
-                placeholder="Електронна пошта*"
+                placeholder="Email*"
               />
             </div>
 
             <div className={styles.formGroup}>
               <label htmlFor="bookingDate" className={styles.formLabel}>
-                Дата оренди
+                Booking date
               </label>
               <div className={styles.dateInputWrapper}>
                 <CalendarIcon className={styles.dateIcon} />
@@ -170,7 +170,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
 
             <div className={styles.formGroup}>
               <label htmlFor="comment" className={styles.formLabel}>
-                Коментар
+                Comment
               </label>
               <textarea
                 id="comment"
@@ -179,7 +179,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
                 onChange={handleInputChange}
                 rows={4}
                 className={styles.formTextarea}
-                placeholder="Коментар"
+                placeholder="Comment"
               />
             </div>
 
@@ -188,13 +188,13 @@ export default function CarDetails({ car }: CarDetailsProps) {
               disabled={isSubmitting}
               className={styles.submitButton}
             >
-              {isSubmitting ? 'Відправка...' : 'Відправити'}
+              {isSubmitting ? 'Sending...' : 'Send'}
             </button>
           </form>
 
           {showNotification && (
             <div className={styles.notification}>
-              <p>✅ Бронювання успішне! Ми зв&apos;яжемося з вами найближчим часом.</p>
+              <p>✅ Booking successful! We will contact you soon.</p>
             </div>
           )}
         </div>
@@ -217,7 +217,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
         </div>
 
         <div className={styles.carMileage}>
-          Пробіг: {formatMileage(car.mileage)} км
+          Mileage: {formatMileage(car.mileage)} km
         </div>
 
         <div className={styles.carPrice}>{car.rentalPrice}</div>
@@ -228,7 +228,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
 
         {rentalConditions.length > 0 && (
           <div className={styles.rentalConditions}>
-            <h2 className={styles.sectionTitle}>Умови оренди:</h2>
+            <h2 className={styles.sectionTitle}>Rental Conditions:</h2>
             <ul className={styles.conditionsList}>
               {rentalConditions.map((condition, index) => (
                 <li key={index}>
@@ -241,23 +241,23 @@ export default function CarDetails({ car }: CarDetailsProps) {
         )}
 
         <div className={styles.carSpecifications}>
-          <h2 className={styles.sectionTitle}>Характеристики автомобіля:</h2>
+          <h2 className={styles.sectionTitle}>Car Specifications:</h2>
           <div className={styles.specsGrid}>
             <div className={styles.specItem}>
               <CalendarIcon className={styles.specIcon} />
-              <span>Рік: {car.year}</span>
+              <span>Year: {car.year}</span>
             </div>
             <div className={styles.specItem}>
               <CarIcon className={styles.specIcon} />
-              <span>Тип: {car.type}</span>
+              <span>Type: {car.type}</span>
             </div>
             <div className={styles.specItem}>
               <FuelIcon className={styles.specIcon} />
-              <span>Витрата палива: {car.fuelConsumption}</span>
+              <span>Fuel Consumption: {car.fuelConsumption}</span>
             </div>
             <div className={styles.specItem}>
               <GearIcon className={styles.specIcon} />
-              <span>Об&apos;єм двигуна: {car.engineSize}</span>
+              <span>Engine Size: {car.engineSize}</span>
             </div>
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
         {allFeatures.length > 0 && (
           <div className={styles.accessoriesSection}>
             <h2 className={styles.sectionTitle}>
-              Аксесуари та функціонал:
+              Accessories and functionalities:
             </h2>
             <ul className={styles.featuresList}>
               {allFeatures.map((feature, index) => (

@@ -9,13 +9,13 @@ export default function HomePage() {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            Знайдіть ідеальний автомобіль для оренди
+            Find your perfect rental car
           </h1>
           <p className={styles.heroSubtitle}>
-            Надійні та доступні автомобілі для будь-якої подорожі
+            Reliable and budget-friendly rentals for any journey
           </p>
           <Link href="/catalog" className={styles.ctaButton}>
-            Переглянути каталог
+            View Catalog
           </Link>
         </div>
       </section>
