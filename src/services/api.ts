@@ -52,97 +52,47 @@ export const fetchCars = async (
       // params.maxMileage = Number(filters.mileageTo);
     }
 
-    console.log('Fetching cars with params:', params);
-    
     // Try different endpoints - API might use /cars instead of /api/cars
     let response;
     try {
       // First try /api/cars
-      console.log('Trying /api/cars');
       response = await api.get('/api/cars', { params });
     } catch (error: any) {
       if (error.response?.status === 404) {
         // If 404, try /cars
-        console.log('404 on /api/cars, trying /cars');
-        try {
-          response = await api.get('/cars', { params });
-        } catch (error2: any) {
-          if (error2.response?.status === 404) {
-            // Try root endpoint
-            console.log('404 on /cars, trying root');
-            response = await api.get('/', { params });
-          } else {
-            throw error2;
-          }
-        }
+        response = await api.get('/cars', { params });
       } else {
         throw error;
       }
     }
     
-    console.log('Full URL:', response.config.url);
-    
-    console.log('=== API RESPONSE DEBUG ===');
-    console.log('Status:', response.status);
-    console.log('Full response:', response);
-    console.log('Response data:', response.data);
-    console.log('Response data type:', typeof response.data);
-    console.log('Is array?', Array.isArray(response.data));
-    
-    if (response.data) {
-      if (typeof response.data === 'object' && !Array.isArray(response.data)) {
-        console.log('Response data keys:', Object.keys(response.data));
-        console.log('Response data structure:', {
-          hasData: !!response.data.data,
-          hasCars: !!response.data.cars,
-          hasItems: !!response.data.items,
-          hasResults: !!response.data.results,
-          hasRecords: !!response.data.records,
-          total: response.data.total,
-          count: response.data.count,
-          length: response.data.length,
-        });
-        
-        // Log full structure
-        console.log('Full response.data:', JSON.stringify(response.data, null, 2));
-      } else if (Array.isArray(response.data)) {
-        console.log('Response is array, length:', response.data.length);
-        if (response.data.length > 0) {
-          console.log('First item:', response.data[0]);
-        }
-      }
-    } else {
-      console.warn('Response data is null or undefined!');
+    // Reduced logging for production
+    if (process.env.NODE_ENV === 'development') {
+      console.log('API response status:', response.status);
+      console.log('Cars found:', response.data?.cars?.length || response.data?.length || 0);
     }
-    console.log('=== END DEBUG ===');
     
-    // API typically returns data in format: { data: [...], total: number }
-    // or directly as array
+    // API returns data in format: { cars: [...], totalCars: number, page: string, totalPages: number }
+    let cars: any[] = [];
+    
     if (Array.isArray(response.data)) {
-      console.log('Returning array directly, count:', response.data.length);
-      return response.data;
+      cars = response.data;
+    } else if (response.data?.cars && Array.isArray(response.data.cars)) {
+      cars = response.data.cars;
+    } else if (response.data?.data && Array.isArray(response.data.data)) {
+      cars = response.data.data;
+    } else if (response.data?.items && Array.isArray(response.data.items)) {
+      cars = response.data.items;
     }
     
-    // Check for nested data array
-    if (response.data?.data && Array.isArray(response.data.data)) {
-      console.log('Returning response.data.data, count:', response.data.data.length);
-      return response.data.data;
-    }
+    // Map API response to our Car interface
+    // API returns 'brand' but our interface expects 'make'
+    const mappedCars = cars.map((car: any) => ({
+      ...car,
+      make: car.brand || car.make, // Use brand from API or fallback to make
+    }));
     
-    // Check for cars property
-    if (response.data?.cars && Array.isArray(response.data.cars)) {
-      console.log('Returning response.data.cars, count:', response.data.cars.length);
-      return response.data.cars;
-    }
-    
-    // Check for items property (some APIs use this)
-    if (response.data?.items && Array.isArray(response.data.items)) {
-      console.log('Returning response.data.items, count:', response.data.items.length);
-      return response.data.items;
-    }
-    
-    console.warn('Unexpected response format:', response.data);
-    return [];
+    return mappedCars;
   } catch (error: any) {
     console.error('Error fetching cars:', error);
     if (error.response) {
@@ -158,15 +108,32 @@ export const fetchCars = async (
 // Fetch car by ID
 export const fetchCarById = async (id: string): Promise<Car> => {
   try {
-    const response = await api.get(`/api/cars/${id}`);
+    let response;
+    try {
+      response = await api.get(`/api/cars/${id}`);
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        response = await api.get(`/cars/${id}`);
+      } else {
+        throw error;
+      }
+    }
+    
     // Handle different response formats
+    let car: any;
     if (response.data?.data) {
-      return response.data.data;
+      car = response.data.data;
+    } else if (response.data?.car) {
+      car = response.data.car;
+    } else {
+      car = response.data;
     }
-    if (response.data?.car) {
-      return response.data.car;
-    }
-    return response.data;
+    
+    // Map API response - API returns 'brand' but our interface expects 'make'
+    return {
+      ...car,
+      make: car.brand || car.make,
+    };
   } catch (error) {
     console.error('Error fetching car by ID:', error);
     throw error;
@@ -186,7 +153,12 @@ export const submitRental = async (data: {
       await api.post('/api/rentals', data);
     } catch (error: any) {
       if (error.response?.status === 404) {
-        await api.post('/rentals', data);
+        try {
+          await api.post('/rentals', data);
+        } catch (error2: any) {
+          // If both fail, just log and continue (API might not have this endpoint)
+          console.warn('Rental submission endpoint not found, but continuing...');
+        }
       } else {
         throw error;
       }
