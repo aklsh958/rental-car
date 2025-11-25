@@ -44,27 +44,33 @@ export const fetchCars = async (
     const response = await api.get('/api/cars', { params });
     
     console.log('API response status:', response.status);
-    console.log('API response headers:', response.headers);
-    console.log('API response data:', response.data);
-    console.log('API response data type:', typeof response.data);
-    console.log('Is array?', Array.isArray(response.data));
-    if (response.data && typeof response.data === 'object') {
-      console.log('Response data keys:', Object.keys(response.data));
-    }
+    console.log('API response data:', JSON.stringify(response.data, null, 2));
     
-    // Handle different response formats
+    // API typically returns data in format: { data: [...], total: number }
+    // or directly as array
     if (Array.isArray(response.data)) {
       console.log('Returning array directly, count:', response.data.length);
       return response.data;
     }
+    
+    // Check for nested data array
     if (response.data?.data && Array.isArray(response.data.data)) {
       console.log('Returning response.data.data, count:', response.data.data.length);
       return response.data.data;
     }
+    
+    // Check for cars property
     if (response.data?.cars && Array.isArray(response.data.cars)) {
       console.log('Returning response.data.cars, count:', response.data.cars.length);
       return response.data.cars;
     }
+    
+    // Check for items property (some APIs use this)
+    if (response.data?.items && Array.isArray(response.data.items)) {
+      console.log('Returning response.data.items, count:', response.data.items.length);
+      return response.data.items;
+    }
+    
     console.warn('Unexpected response format:', response.data);
     return [];
   } catch (error: any) {
