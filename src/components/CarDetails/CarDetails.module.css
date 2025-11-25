@@ -67,12 +67,12 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #121417;
+  color: #101828;
 }
 
 .formSubtitle {
   font-size: 0.875rem;
-  color: rgba(18, 20, 23, 0.5);
+  color: #8e929a;
   margin-bottom: 24px;
 }
 
@@ -88,20 +88,38 @@
   gap: 8px;
 }
 
+.dateInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dateIcon {
+  position: absolute;
+  left: 18px;
+  color: #8e929a;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dateInputWrapper .formInput {
+  padding-left: 50px;
+}
+
 .formLabel {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #121417;
+  color: #101828;
 }
 
 .formInput,
 .formTextarea {
   padding: 14px 18px;
-  border: 1px solid rgba(18, 20, 23, 0.1);
+  border: 1px solid #dadde1;
   border-radius: 14px;
   font-size: 1rem;
   font-family: inherit;
-  color: #121417;
+  color: #101828;
   background: white;
   outline: none;
   transition: all 0.3s ease;
@@ -184,13 +202,13 @@
 .carTitle {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #121417;
+  color: #101828;
   margin: 0;
 }
 
 .carId {
   font-size: 0.875rem;
-  color: rgba(18, 20, 23, 0.5);
+  color: #8e929a;
 }
 
 .carLocation {
@@ -198,17 +216,17 @@
   align-items: center;
   gap: 8px;
   font-size: 0.875rem;
-  color: #121417;
+  color: #101828;
   margin-bottom: 8px;
 }
 
 .locationIcon {
-  color: rgba(18, 20, 23, 0.5);
+  color: #8e929a;
 }
 
 .carMileage {
   font-size: 0.875rem;
-  color: #121417;
+  color: #101828;
   margin-bottom: 16px;
 }
 
@@ -223,12 +241,6 @@
   margin-bottom: 24px;
 }
 
-.description p {
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: rgba(18, 20, 23, 0.8);
-}
-
 .rentalConditions,
 .carSpecifications,
 .accessoriesSection {
@@ -239,7 +251,7 @@
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #121417;
+  color: #101828;
 }
 
 .conditionsList,
@@ -258,7 +270,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.875rem;
-  color: #121417;
+  color: #101828;
 }
 
 .checkIcon {
@@ -276,11 +288,11 @@
   align-items: center;
   gap: 8px;
   font-size: 0.875rem;
-  color: #121417;
+  color: #101828;
 }
 
 .specIcon {
-  color: rgba(18, 20, 23, 0.5);
+  color: #8e929a;
   flex-shrink: 0;
 }
 
