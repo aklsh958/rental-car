@@ -1,45 +1,65 @@
-.catalogPage {
-  padding: 84px 0 124px;
+.catalogSection {
+  padding-top: 84px;
+  padding-bottom: 124px;
 }
 
 .container {
-  display: flex;
   flex-direction: column;
+  display: flex;
   align-items: center;
 }
 
 .pageTitle {
   font-size: 2rem;
   font-weight: 600;
-  margin-bottom: 2rem;
   color: #101828;
+  margin-bottom: 2rem;
 }
 
-.errorMessage {
-  margin-bottom: 24px;
+.error {
   color: #b42318;
   font-weight: 600;
+  margin-bottom: 24px;
 }
 
-.loadMoreContainer {
+.loaderContainer {
+  width: 100%;
+  min-height: 400px;
+  padding-top: 80px;
+  padding-bottom: 80px;
   display: flex;
   justify-content: center;
-  margin-top: 80px;
+  align-items: center;
+}
+
+.loaderOverlay {
   width: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadMoreWrapper {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
 }
 
 .loadMoreButton {
-  border: 1px solid #3470ff;
-  border-radius: 12px;
-  padding: 12px 20px;
   width: 156px;
   height: 44px;
+  padding: 12px 20px;
+  border: 1px solid #3470ff;
+  border-radius: 12px;
   background-color: #fff;
   color: #101828;
-  font-weight: 600;
   font-size: 16px;
+  font-weight: 600;
   line-height: 1.25;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease;
   cursor: pointer;
 }
 
@@ -50,45 +70,13 @@
 }
 
 .loadMoreButton:disabled {
-  opacity: 0.6;
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.statusMessage {
+.statusText {
   margin-top: 24px;
   text-align: center;
   color: #475467;
-}
-
-.loaderContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  width: 100%;
-  padding: 80px 0;
-}
-
-.loaderOverlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 40px 0;
-  position: relative;
-}
-
-@media (max-width: 480px) {
-  .catalogPage {
-    padding: 60px 0 80px;
-  }
-
-  .pageTitle {
-    font-size: 1.5rem;
-  }
-
-  .loadMoreContainer {
-    margin-top: 40px;
-  }
 }
 

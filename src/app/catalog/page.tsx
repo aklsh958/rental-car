@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useCarsStore } from '@/store/carsStore';
 import CarList from '@/components/CarList/CarList';
-import Filters from '@/components/Filters/Filters';
+import SearchFilters from '@/components/SearchFilters/SearchFilters';
 import styles from './page.module.css';
 
 export default function CatalogPage() {
@@ -15,39 +15,46 @@ export default function CatalogPage() {
     loadMoreCars,
   } = useCarsStore();
 
-  const hasInitialized = useRef(false);
+  const initializationRef = useRef(false);
 
   useEffect(() => {
-    if (hasInitialized.current) return;
+    if (initializationRef.current) {
+      return;
+    }
 
-    const emptyFilters = {
+    const defaultFilters = {
       brand: '',
       price: '',
       mileageFrom: '',
       mileageTo: '',
     };
-    
-    loadCars(emptyFilters, 1).finally(() => {
-      hasInitialized.current = true;
+
+    loadCars(defaultFilters, 1).finally(() => {
+      initializationRef.current = true;
     });
   }, [loadCars]);
 
-  const showLoaderOnly = isLoading && filteredCars.length === 0;
+  const shouldShowLoaderOnly = isLoading && filteredCars.length === 0;
+  const shouldShowLoaderOverlay = isLoading && filteredCars.length > 0;
+  const canLoadMore = hasMore && !isLoading;
+  const hasNoResults = !hasMore && !isLoading && filteredCars.length === 0;
 
   return (
-    <section className={styles.catalogPage}>
+    <section className={styles.catalogSection}>
       <div className={`container ${styles.container}`}>
         <h1 className={styles.pageTitle}>Catalog</h1>
         
-        <Filters />
+        <SearchFilters />
 
-        {showLoaderOnly ? (
+        {shouldShowLoaderOnly && (
           <div className={styles.loaderContainer}>
             <div className="loader" />
           </div>
-        ) : (
+        )}
+
+        {!shouldShowLoaderOnly && (
           <>
-            {isLoading && filteredCars.length > 0 && (
+            {shouldShowLoaderOverlay && (
               <div className={styles.loaderOverlay}>
                 <div className="loader" />
               </div>
@@ -56,8 +63,8 @@ export default function CatalogPage() {
           </>
         )}
 
-        {hasMore && (
-          <div className={styles.loadMoreContainer}>
+        {canLoadMore && (
+          <div className={styles.loadMoreWrapper}>
             <button
               type="button"
               onClick={loadMoreCars}
@@ -69,8 +76,14 @@ export default function CatalogPage() {
           </div>
         )}
 
+        {hasNoResults && (
+          <p role="alert" aria-live="assertive" className={styles.error}>
+            No cars found. Try adjusting the filters.
+          </p>
+        )}
+
         {!hasMore && !isLoading && filteredCars.length > 0 && (
-          <p aria-live="polite" className={styles.statusMessage}>
+          <p aria-live="polite" className={styles.statusText}>
             You&apos;ve reached the end of the catalog.
           </p>
         )}

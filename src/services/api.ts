@@ -71,7 +71,7 @@ export const fetchCars = async (
       cars = response.data.items;
     }
     
-    let mappedCars = cars.map((car: any) => {
+    const mappedCars = cars.map((car: any) => {
       const imgUrl = car.img || car.image || '';
       
       return {
@@ -80,20 +80,6 @@ export const fetchCars = async (
         img: imgUrl,
       };
     });
-    
-    if (filters.brand && filters.brand.trim() !== '') {
-      const brandFilter = filters.brand.trim();
-      mappedCars = mappedCars.filter((car) => {
-        const carMake = car.make?.toLowerCase() || '';
-        const filterBrand = brandFilter.toLowerCase();
-        
-        if (filterBrand === 'mercedes-benz') {
-          return carMake === 'mercedes-benz' || carMake === 'mercedes' || carMake.includes('mercedes');
-        }
-        
-        return carMake === filterBrand;
-      });
-    }
     
     return mappedCars;
   } catch (error: any) {

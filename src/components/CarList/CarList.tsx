@@ -8,7 +8,11 @@ type Props = {
 
 const CarList = ({ cars }: Props) => {
   if (!cars.length) {
-    return <p className={styles.empty}>No cars found. Try adjusting the filters.</p>;
+    return (
+      <p className={styles.empty}>
+        No cars found. Try adjusting the filters.
+      </p>
+    );
   }
 
   return (
