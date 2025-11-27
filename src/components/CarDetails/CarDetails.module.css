@@ -1,27 +1,26 @@
 .carDetails {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 24px;
   max-width: 1400px;
   margin: 0 auto;
-  background: white;
-  padding: 40px;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: transparent;
+  padding: 0;
 }
 
 .leftSection {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 24px;
 }
 
 .carImageSection {
   position: relative;
   width: 100%;
-  min-height: 400px;
+  height: 268px;
   border-radius: 14px;
   overflow: hidden;
+  background: #f3f3f3;
 }
 
 .carImage {
@@ -58,34 +57,50 @@
 }
 
 .rentalFormSection {
+  width: 100%;
+  border: 1px solid #dadde1;
+  border-radius: 10px;
+  padding: 32px;
+  max-width: 640px;
   background: white;
-  padding: 24px;
-  border-radius: 14px;
+}
+
+.formHeader {
+  margin-bottom: 24px;
 }
 
 .formTitle {
-  font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 8px;
+  font-size: 20px;
+  line-height: 1.2;
   color: #101828;
+  margin-bottom: 8px;
 }
 
 .formSubtitle {
-  font-size: 0.875rem;
-  color: #8e929a;
-  margin-bottom: 24px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #8d929a;
 }
 
 .rentalForm {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .formGroup {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+}
+
+.formLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #101828;
+  margin-bottom: 8px;
 }
 
 .dateInputWrapper {
@@ -96,8 +111,8 @@
 
 .dateIcon {
   position: absolute;
-  left: 18px;
-  color: #8e929a;
+  left: 20px;
+  color: #8d929a;
   pointer-events: none;
   z-index: 1;
 }
@@ -106,58 +121,78 @@
   padding-left: 50px;
 }
 
-.formLabel {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #101828;
-}
-
 .formInput,
 .formTextarea {
-  padding: 14px 18px;
-  border: 1px solid #dadde1;
-  border-radius: 14px;
-  font-size: 1rem;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  background-color: #f7f7f7;
+  padding: 12px 20px;
+  height: 48px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #8d929a;
   font-family: inherit;
-  color: #101828;
-  background: white;
   outline: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-.formInput:focus,
-.formTextarea:focus {
-  border-color: #3470ff;
-  box-shadow: 0 0 0 2px rgba(52, 112, 255, 0.1);
+.formInput::placeholder,
+.formTextarea::placeholder {
+  color: #8d929a;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.formInput:focus-visible,
+.formTextarea:focus-visible {
+  outline: 2px solid #3470ff;
+  outline-offset: 0;
+}
+
+.formInput.inputError,
+.formTextarea.inputError {
+  outline: 2px solid #c00101;
 }
 
 .formTextarea {
-  resize: vertical;
-  min-height: 100px;
+  min-height: 88px;
+  resize: none;
 }
 
 .submitButton {
-  padding: 14px 0;
-  background-color: #3470ff;
-  color: white;
-  border: none;
   border-radius: 12px;
-  font-size: 1rem;
+  padding: 12px 51px;
+  width: 156px;
+  height: 44px;
+  border: none;
+  background-color: #3470ff;
+  color: #ffffff;
+  font-size: 16px;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
   cursor: pointer;
   margin-top: 8px;
-}
-
-.submitButton:hover:not(:disabled) {
-  background-color: #0b44cd;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(52, 112, 255, 0.3);
+  align-self: center;
 }
 
 .submitButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.submitButton:not(:disabled):hover,
+.submitButton:not(:disabled):focus-visible {
+  background-color: #0b44cd;
+  transform: translateY(-2px);
+}
+
+.errorText {
+  font-size: 12px;
+  color: #c00101;
+  margin-top: 4px;
 }
 
 .notification {
@@ -189,56 +224,70 @@
 }
 
 .carHeader {
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
 .carTitleRow {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
 }
 
 .carTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #101828;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #121417;
   margin: 0;
+  line-height: 1.33;
 }
 
 .carId {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: #8e929a;
+  line-height: 1.5;
 }
 
 .carLocation {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  color: #101828;
-  margin-bottom: 8px;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #121417;
+  margin-bottom: 4px;
+  line-height: 1.5;
 }
 
 .locationIcon {
   color: #8e929a;
+  flex-shrink: 0;
 }
 
 .carMileage {
-  font-size: 0.875rem;
-  color: #101828;
-  margin-bottom: 16px;
+  font-size: 0.75rem;
+  color: #121417;
+  margin-bottom: 14px;
+  line-height: 1.5;
 }
 
 .carPrice {
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 1.125rem;
+  font-weight: 500;
   color: #3470ff;
   margin-bottom: 24px;
+  line-height: 1.33;
 }
 
 .description {
   margin-bottom: 24px;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  color: #121417;
+}
+
+.description p {
+  margin: 0;
 }
 
 .rentalConditions,
@@ -248,10 +297,12 @@
 }
 
 .sectionTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #101828;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 14px;
+  color: #121417;
+  line-height: 1.43;
+  text-transform: none;
 }
 
 .conditionsList,
@@ -260,17 +311,21 @@
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .conditionsList li,
 .featuresList li {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  color: #101828;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #363535;
+  padding: 7px 14px;
+  background: #f9f9f9;
+  border-radius: 35px;
+  white-space: nowrap;
 }
 
 .checkIcon {
@@ -279,17 +334,18 @@
 }
 
 .specsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .specItem {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.875rem;
-  color: #101828;
+  font-size: 0.75rem;
+  color: #121417;
+  line-height: 1.5;
 }
 
 .specIcon {

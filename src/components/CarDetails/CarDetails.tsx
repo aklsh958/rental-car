@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
+import * as Yup from 'yup';
+import toast from 'react-hot-toast';
 import { useCarsStore } from '@/store/carsStore';
 import { Car } from '@/types';
 import { formatMileage, submitRental } from '@/services/api';
@@ -12,17 +15,59 @@ interface CarDetailsProps {
   car: Car;
 }
 
+type BookingFormValues = {
+  name: string;
+  email: string;
+  bookingDate: string;
+  comment: string;
+};
+
+const DEFAULT_FORM_VALUES: BookingFormValues = {
+  name: '',
+  email: '',
+  bookingDate: '',
+  comment: '',
+};
+
+const bookingSchema = Yup.object({
+  name: Yup.string()
+    .min(2, 'Enter at least 2 characters')
+    .max(60, 'Too long')
+    .required('Name is required'),
+  email: Yup.string()
+    .email('Enter a valid email')
+    .required('Email is required'),
+  bookingDate: Yup.string().required('Choose a booking date'),
+  comment: Yup.string().max(500, 'Maximum 500 characters'),
+});
+
 export default function CarDetails({ car }: CarDetailsProps) {
   const { favorites, addToFavorites, removeFromFavorites } = useCarsStore();
   const isFavorite = favorites.includes(car.id);
-  const [showNotification, setShowNotification] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    bookingDate: '',
-    comment: '',
-  });
+  const [initialValues, setInitialValues] = useState<BookingFormValues>(DEFAULT_FORM_VALUES);
+  const [isReady, setIsReady] = useState(false);
+
+  const storageKey = `booking-form-${car.id}`;
+
+  // Load form data from localStorage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const saved = window.localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as BookingFormValues;
+        setInitialValues({
+          ...DEFAULT_FORM_VALUES,
+          ...parsed,
+        });
+      } catch (err) {
+        console.warn('Failed to parse saved booking form', err);
+      }
+    }
+
+    setIsReady(true);
+  }, [storageKey]);
 
   // Parse rental conditions - API returns array or string
   const rentalConditions = Array.isArray(car.rentalConditions)
@@ -45,44 +90,35 @@ export default function CarDetails({ car }: CarDetailsProps) {
     }
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleSubmit = useCallback(
+    async (
+      values: BookingFormValues,
+      helpers: FormikHelpers<BookingFormValues>
+    ) => {
+      try {
+        await submitRental({
+          carId: car.id,
+          name: values.name,
+          email: values.email,
+          phone: '', // Not in form but required by API
+          message: values.comment,
+        });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+        helpers.resetForm({ values: DEFAULT_FORM_VALUES });
+        helpers.setSubmitting(false);
 
-    try {
-      await submitRental({
-        carId: car.id,
-        name: formData.name,
-        email: formData.email,
-        phone: '', // Not in form but required by API
-        message: formData.comment,
-      });
+        if (typeof window !== 'undefined') {
+          window.localStorage.removeItem(storageKey);
+        }
 
-      setShowNotification(true);
-      setFormData({
-        name: '',
-        email: '',
-        bookingDate: '',
-        comment: '',
-      });
-
-      setTimeout(() => {
-        setShowNotification(false);
-      }, 5000);
-    } catch (error) {
-      console.error('Error submitting rental:', error);
-      alert('Error submitting form. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        toast.success('Your booking has been successfully submitted! We will contact you soon.');
+      } catch (error) {
+        console.error('Error submitting rental:', error);
+        toast.error('Error submitting form. Please try again.');
+      }
+    },
+    [car.id, storageKey]
+  );
 
   // Extract city and country from address
   const addressParts = car.address.split(',');
@@ -90,7 +126,20 @@ export default function CarDetails({ car }: CarDetailsProps) {
   const country = addressParts[2]?.trim() || 'Ukraine';
 
   // Extract ID from car (might be in different format)
-  const carId = car.id.split('-')[0] || car.id.substring(0, 4);
+  const carIdMatch = car.id.match(/\d+/);
+  const carId = carIdMatch ? carIdMatch[0] : car.id.split('-')[0] || car.id.substring(0, 4);
+
+  if (!isReady) {
+    return (
+      <div className={styles.carDetails}>
+        <div className={styles.leftSection}>
+          <div className={styles.carImageSection} style={{ minHeight: '268px' }} />
+          <div className={styles.rentalFormSection} style={{ minHeight: '400px' }} />
+        </div>
+        <div className={styles.rightSection} style={{ minHeight: '600px' }} />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.carDetails}>
@@ -114,89 +163,102 @@ export default function CarDetails({ car }: CarDetailsProps) {
         </div>
 
         <div className={styles.rentalFormSection}>
-          <h2 className={styles.formTitle}>Book your car now</h2>
-          <p className={styles.formSubtitle}>
-            Stay connected! We are always ready to help you.
-          </p>
-          <form onSubmit={handleSubmit} className={styles.rentalForm}>
-            <div className={styles.formGroup}>
-              <label htmlFor="name" className={styles.formLabel}>
-                Name*
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-                className={styles.formInput}
-                placeholder="Name*"
-              />
-            </div>
+          <div className={styles.formHeader}>
+            <h2 className={styles.formTitle}>Book your car now</h2>
+            <p className={styles.formSubtitle}>
+              Stay connected! We are always ready to help you.
+            </p>
+          </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="email" className={styles.formLabel}>
-                Email*
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-                className={styles.formInput}
-                placeholder="Email*"
-              />
-            </div>
+          <Formik
+            initialValues={initialValues}
+            enableReinitialize
+            validationSchema={bookingSchema}
+            onSubmit={handleSubmit}
+            validateOnBlur
+            validateOnChange
+          >
+            {({ values, errors, touched, isSubmitting, isValid, dirty }) => {
+              // Save form data to localStorage
+              useEffect(() => {
+                if (typeof window === 'undefined') return;
+                window.localStorage.setItem(storageKey, JSON.stringify(values));
+              }, [storageKey, values]);
 
-            <div className={styles.formGroup}>
-              <label htmlFor="bookingDate" className={styles.formLabel}>
-                Booking date
-              </label>
-              <div className={styles.dateInputWrapper}>
-                <CalendarIcon className={styles.dateIcon} />
-                <input
-                  type="date"
-                  id="bookingDate"
-                  name="bookingDate"
-                  value={formData.bookingDate}
-                  onChange={handleInputChange}
-                  className={styles.formInput}
-                />
-              </div>
-            </div>
+              return (
+                <Form className={styles.rentalForm}>
+                  <div className={styles.formGroup}>
+                    <Field
+                      type="text"
+                      name="name"
+                      placeholder="Name*"
+                      className={`${styles.formInput} ${
+                        errors.name && touched.name ? styles.inputError : ''
+                      }`}
+                      disabled={isSubmitting}
+                    />
+                    <ErrorMessage component="span" name="name" className={styles.errorText} />
+                  </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="comment" className={styles.formLabel}>
-                Comment
-              </label>
-              <textarea
-                id="comment"
-                name="comment"
-                value={formData.comment}
-                onChange={handleInputChange}
-                rows={4}
-                className={styles.formTextarea}
-                placeholder="Comment"
-              />
-            </div>
+                  <div className={styles.formGroup}>
+                    <Field
+                      type="email"
+                      name="email"
+                      placeholder="Email*"
+                      className={`${styles.formInput} ${
+                        errors.email && touched.email ? styles.inputError : ''
+                      }`}
+                      disabled={isSubmitting}
+                    />
+                    <ErrorMessage component="span" name="email" className={styles.errorText} />
+                  </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={styles.submitButton}
-            >
-              {isSubmitting ? 'Sending...' : 'Send'}
-            </button>
-          </form>
+                  <div className={styles.formGroup}>
+                    <div className={styles.dateInputWrapper}>
+                      <CalendarIcon className={styles.dateIcon} />
+                      <Field
+                        type="date"
+                        name="bookingDate"
+                        className={`${styles.formInput} ${
+                          errors.bookingDate && touched.bookingDate ? styles.inputError : ''
+                        }`}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <ErrorMessage
+                      component="span"
+                      name="bookingDate"
+                      className={styles.errorText}
+                    />
+                  </div>
 
-          {showNotification && (
-            <div className={styles.notification}>
-              <p>✅ Booking successful! We will contact you soon.</p>
-            </div>
-          )}
+                  <div className={styles.formGroup}>
+                    <Field
+                      as="textarea"
+                      name="comment"
+                      placeholder="Comment"
+                      rows={4}
+                      className={`${styles.formInput} ${styles.textarea} ${
+                        errors.comment && touched.comment ? styles.inputError : ''
+                      }`}
+                      disabled={isSubmitting}
+                    />
+                    <ErrorMessage component="span" name="comment" className={styles.errorText} />
+                  </div>
+
+                  <div className={styles.btnWrapper}>
+                    <button
+                      type="submit"
+                      className={styles.submitButton}
+                      disabled={isSubmitting || !isValid || !dirty}
+                    >
+                      {isSubmitting ? 'Sending…' : 'Send'}
+                    </button>
+                  </div>
+                </Form>
+              );
+            }}
+          </Formik>
         </div>
       </div>
 

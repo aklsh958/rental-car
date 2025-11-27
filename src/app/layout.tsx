@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import Header from '@/components/Header/Header';
 import './globals.css';
+import Header from '@/components/Header/Header';
+import ToasterComponent from '@/components/Toaster/Toaster';
 
 export const metadata: Metadata = {
   title: 'RentalCar - Car Rental Service',
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body>
         <Header />
         {children}
+        <ToasterComponent />
       </body>
     </html>
   );

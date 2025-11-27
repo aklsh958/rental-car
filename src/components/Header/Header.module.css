@@ -11,26 +11,26 @@
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: 600;
+  display: inline-block;
   text-decoration: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.logoRental {
-  color: #101828;
-}
-
-.logoCar {
-  color: #3470ff;
+  line-height: 0;
 }
 
 .nav {
+  display: block;
+}
+
+.navigation {
   display: flex;
   gap: 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation li {
+  margin: 0;
+  padding: 0;
 }
 
 .navLink {
