@@ -14,14 +14,15 @@
   overflow: hidden;
   width: 100%;
   height: 268px;
+  background: #f3f3f3;
 }
 
-.imageWrapper :global(img) {
+.carImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
+
 
 .favoriteButton {
   position: absolute;
