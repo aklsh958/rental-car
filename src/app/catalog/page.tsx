@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useCarsStore } from '@/store/carsStore';
-import CarCard from '@/components/CarCard/CarCard';
+import CarList from '@/components/CarList/CarList';
 import Filters from '@/components/Filters/Filters';
 import styles from './page.module.css';
 
@@ -41,17 +41,9 @@ export default function CatalogPage() {
         
         {isLoading && filteredCars.length === 0 ? (
           <div className="loader" />
-        ) : filteredCars.length === 0 ? (
-          <div className={styles.noResults}>
-            <p>No cars found. Try changing the filters.</p>
-          </div>
         ) : (
           <>
-            <div className={styles.carsGrid}>
-              {filteredCars.map((car) => (
-                <CarCard key={car.id} car={car} />
-              ))}
-            </div>
+            <CarList cars={filteredCars} />
             
             {hasMore && (
               <div className={styles.loadMoreContainer}>
