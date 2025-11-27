@@ -77,12 +77,20 @@ export default function SearchFilters() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const filters: Partial<FilterState> = {
-      brand: formState.brand || '',
-      price: formState.price || '',
-      mileageFrom: formState.mileageFrom || '',
-      mileageTo: formState.mileageTo || '',
-    };
+    const filters: Partial<FilterState> = {};
+    
+    if (formState.brand && formState.brand.trim() !== '') {
+      filters.brand = formState.brand.trim();
+    }
+    if (formState.price && formState.price.trim() !== '') {
+      filters.price = formState.price.trim();
+    }
+    if (formState.mileageFrom && formState.mileageFrom.trim() !== '') {
+      filters.mileageFrom = formState.mileageFrom.trim();
+    }
+    if (formState.mileageTo && formState.mileageTo.trim() !== '') {
+      filters.mileageTo = formState.mileageTo.trim();
+    }
 
     setFilters(filters);
     loadCars(filters, 1);

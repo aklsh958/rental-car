@@ -34,8 +34,8 @@ const CarItem = ({ item }: Props) => {
         <Image
           src={item.img || '/placeholder-car.jpg'}
           alt={`${item.make} ${item.model}`}
-          width={274}
-          height={268}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         />
         <button
           type="button"
