@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import toast from 'react-hot-toast';
 import { useCarsStore } from '@/store/carsStore';
 import { Car } from '@/types';
 import { formatMileage, submitRental } from '@/services/api';
 import { HeartIcon, LocationPinIcon, CheckIcon, CalendarIcon, CarIcon, FuelIcon, GearIcon } from '@/components/Icons/Icons';
+import BookingFormFields from './BookingFormFields';
 import styles from './CarDetails.module.css';
 
 interface CarDetailsProps {
@@ -67,7 +68,8 @@ export default function CarDetails({ car }: CarDetailsProps) {
     }
 
     setIsReady(true);
-  }, [storageKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Parse rental conditions - API returns array or string
   const rentalConditions = Array.isArray(car.rentalConditions)
@@ -178,86 +180,9 @@ export default function CarDetails({ car }: CarDetailsProps) {
             validateOnBlur
             validateOnChange
           >
-            {({ values, errors, touched, isSubmitting, isValid, dirty }) => {
-              // Save form data to localStorage
-              useEffect(() => {
-                if (typeof window === 'undefined') return;
-                window.localStorage.setItem(storageKey, JSON.stringify(values));
-              }, [storageKey, values]);
-
-              return (
-                <Form className={styles.rentalForm}>
-                  <div className={styles.formGroup}>
-                    <Field
-                      type="text"
-                      name="name"
-                      placeholder="Name*"
-                      className={`${styles.formInput} ${
-                        errors.name && touched.name ? styles.inputError : ''
-                      }`}
-                      disabled={isSubmitting}
-                    />
-                    <ErrorMessage component="span" name="name" className={styles.errorText} />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <Field
-                      type="email"
-                      name="email"
-                      placeholder="Email*"
-                      className={`${styles.formInput} ${
-                        errors.email && touched.email ? styles.inputError : ''
-                      }`}
-                      disabled={isSubmitting}
-                    />
-                    <ErrorMessage component="span" name="email" className={styles.errorText} />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <div className={styles.dateInputWrapper}>
-                      <CalendarIcon className={styles.dateIcon} />
-                      <Field
-                        type="date"
-                        name="bookingDate"
-                        className={`${styles.formInput} ${
-                          errors.bookingDate && touched.bookingDate ? styles.inputError : ''
-                        }`}
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                    <ErrorMessage
-                      component="span"
-                      name="bookingDate"
-                      className={styles.errorText}
-                    />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <Field
-                      as="textarea"
-                      name="comment"
-                      placeholder="Comment"
-                      rows={4}
-                      className={`${styles.formInput} ${styles.textarea} ${
-                        errors.comment && touched.comment ? styles.inputError : ''
-                      }`}
-                      disabled={isSubmitting}
-                    />
-                    <ErrorMessage component="span" name="comment" className={styles.errorText} />
-                  </div>
-
-                  <div className={styles.btnWrapper}>
-                    <button
-                      type="submit"
-                      className={styles.submitButton}
-                      disabled={isSubmitting || !isValid || !dirty}
-                    >
-                      {isSubmitting ? 'Sending…' : 'Send'}
-                    </button>
-                  </div>
-                </Form>
-              );
-            }}
+            {(formikProps) => (
+              <BookingFormFields {...formikProps} storageKey={storageKey} />
+            )}
           </Formik>
         </div>
       </div>
