@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useCarsStore } from '@/store/carsStore';
 import CarList from '@/components/CarList/CarList';
 import Filters from '@/components/Filters/Filters';
@@ -13,51 +13,69 @@ export default function CatalogPage() {
     hasMore,
     loadCars,
     loadMoreCars,
-    filters,
   } = useCarsStore();
 
+  const hasInitialized = useRef(false);
+
   useEffect(() => {
+    if (hasInitialized.current) return;
+
     const emptyFilters = {
       brand: '',
       price: '',
       mileageFrom: '',
       mileageTo: '',
     };
-    loadCars(emptyFilters, 1);
-  }, []);
+    
+    loadCars(emptyFilters, 1).finally(() => {
+      hasInitialized.current = true;
+    });
+  }, [loadCars]);
 
-  const handleLoadMore = () => {
-    loadMoreCars();
-  };
+  const showLoaderOnly = isLoading && filteredCars.length === 0;
 
   return (
-    <main className={styles.catalogPage}>
-      <div className="container">
+    <section className={styles.catalogPage}>
+      <div className={`container ${styles.container}`}>
         <h1 className={styles.pageTitle}>Catalog</h1>
         
         <Filters />
-        
-        {isLoading && filteredCars.length === 0 ? (
-          <div className="loader" />
+
+        {showLoaderOnly ? (
+          <div className={styles.loaderContainer}>
+            <div className="loader" />
+          </div>
         ) : (
           <>
-            <CarList cars={filteredCars} />
-            
-            {hasMore && (
-              <div className={styles.loadMoreContainer}>
-                <button
-                  onClick={handleLoadMore}
-                  disabled={isLoading}
-                  className={styles.loadMoreButton}
-                >
-                  {isLoading ? 'Loading...' : 'Load More'}
-                </button>
+            {isLoading && filteredCars.length > 0 && (
+              <div className={styles.loaderOverlay}>
+                <div className="loader" />
               </div>
             )}
+            <CarList cars={filteredCars} />
           </>
         )}
+
+        {hasMore && (
+          <div className={styles.loadMoreContainer}>
+            <button
+              type="button"
+              onClick={loadMoreCars}
+              disabled={isLoading}
+              className={styles.loadMoreButton}
+            >
+              {isLoading ? 'Loading…' : 'Load more'}
+            </button>
+          </div>
+        )}
+
+        {!hasMore && !isLoading && filteredCars.length > 0 && (
+          <p aria-live="polite" className={styles.statusMessage}>
+            You&apos;ve reached the end of the catalog.
+          </p>
+        )}
       </div>
-    </main>
+    </section>
   );
 }
 

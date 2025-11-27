@@ -1,6 +1,11 @@
 .catalogPage {
-  min-height: 100vh;
-  padding: 40px 0;
+  padding: 84px 0 124px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pageTitle {
@@ -10,27 +15,38 @@
   color: #101828;
 }
 
+.errorMessage {
+  margin-bottom: 24px;
+  color: #b42318;
+  font-weight: 600;
+}
 
 .loadMoreContainer {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 80px;
+  width: 100%;
 }
 
 .loadMoreButton {
-  padding: 14px 40px;
-  background-color: white;
-  color: #3470ff;
   border: 1px solid #3470ff;
-  font-size: 1rem;
-  font-weight: 600;
   border-radius: 12px;
-  transition: all 0.3s ease;
+  padding: 12px 20px;
+  width: 156px;
+  height: 44px;
+  background-color: #fff;
+  color: #101828;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.25;
+  transition: border-color 0.2s ease, transform 0.2s ease;
   cursor: pointer;
 }
 
-.loadMoreButton:hover:not(:disabled) {
-  background-color: #f2f4f7;
+.loadMoreButton:hover:not(:disabled),
+.loadMoreButton:focus-visible:not(:disabled) {
+  border-color: #0b44cd;
+  transform: translateY(-2px);
 }
 
 .loadMoreButton:disabled {
@@ -38,9 +54,41 @@
   cursor: not-allowed;
 }
 
+.statusMessage {
+  margin-top: 24px;
+  text-align: center;
+  color: #475467;
+}
+
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  width: 100%;
+  padding: 80px 0;
+}
+
+.loaderOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 40px 0;
+  position: relative;
+}
+
 @media (max-width: 480px) {
+  .catalogPage {
+    padding: 60px 0 80px;
+  }
+
   .pageTitle {
     font-size: 1.5rem;
+  }
+
+  .loadMoreContainer {
+    margin-top: 40px;
   }
 }
 
