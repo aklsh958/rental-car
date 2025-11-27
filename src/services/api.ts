@@ -83,9 +83,16 @@ export const fetchCars = async (
     
     if (filters.brand && filters.brand.trim() !== '') {
       const brandFilter = filters.brand.trim();
-      mappedCars = mappedCars.filter((car) => 
-        car.make?.toLowerCase() === brandFilter.toLowerCase()
-      );
+      mappedCars = mappedCars.filter((car) => {
+        const carMake = car.make?.toLowerCase() || '';
+        const filterBrand = brandFilter.toLowerCase();
+        
+        if (filterBrand === 'mercedes-benz') {
+          return carMake === 'mercedes-benz' || carMake === 'mercedes' || carMake.includes('mercedes');
+        }
+        
+        return carMake === filterBrand;
+      });
     }
     
     return mappedCars;
