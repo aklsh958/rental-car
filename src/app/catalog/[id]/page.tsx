@@ -24,7 +24,6 @@ export default function CarDetailsPage() {
     if (id) {
       loadCar();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   if (isLoading) {

@@ -1,5 +1,3 @@
-// Types for the car rental application
-
 export interface Car {
   id: string;
   year: number;

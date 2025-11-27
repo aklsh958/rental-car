@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useCarsStore } from '@/store/carsStore';
 import styles from './Filters.module.css';
 
-// Price options
 const PRICE_OPTIONS = [
   { value: '', label: 'All prices' },
   { value: '30', label: 'Up to $30' },
@@ -22,16 +21,11 @@ export default function Filters() {
   const [localFilters, setLocalFilters] = useState(filters);
   const [brands, setBrands] = useState<string[]>([]);
 
-  // Sync local filters with store filters only on mount
   useEffect(() => {
     setLocalFilters(filters);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Fetch available brands (this would ideally come from an API)
   useEffect(() => {
-    // For now, we'll use common car brands
-    // In a real app, this would come from the API
     setBrands([
       'Buick',
       'Volvo',

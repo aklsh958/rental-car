@@ -37,7 +37,7 @@ export const useCarsStore = create<CarsStore>()(
       hasMore: true,
 
       setCars: (cars) => set({ cars }),
-      
+
       setFilteredCars: (filteredCars) => set({ filteredCars }),
       
       addToFavorites: (carId) =>
@@ -70,19 +70,18 @@ export const useCarsStore = create<CarsStore>()(
       
       loadCars: async (filters, page = 1) => {
         const currentFilters = filters || get().filters;
-        
-        // Reset previous results before new search
+
         set({ filteredCars: [], page: 1, hasMore: true, isLoading: true });
         set({ filters: currentFilters as FilterState });
-        
+
         try {
           const cars = await fetchCars(currentFilters, page);
-          
+
           set({
             filteredCars: cars,
             cars: cars,
             page,
-            hasMore: cars.length >= 12, // Assuming 12 items per page
+            hasMore: cars.length >= 12,
             isLoading: false,
           });
         } catch (error) {

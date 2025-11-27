@@ -25,7 +25,6 @@ export default function BookingFormFields({
   dirty,
   storageKey,
 }: BookingFormFieldsProps) {
-  // Save form data to localStorage
   useEffect(() => {
     if (typeof window === 'undefined') return;
     window.localStorage.setItem(storageKey, JSON.stringify(values));

@@ -50,7 +50,6 @@ export default function CarDetails({ car }: CarDetailsProps) {
 
   const storageKey = `booking-form-${car.id}`;
 
-  // Load form data from localStorage
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -68,17 +67,14 @@ export default function CarDetails({ car }: CarDetailsProps) {
     }
 
     setIsReady(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Parse rental conditions - API returns array or string
   const rentalConditions = Array.isArray(car.rentalConditions)
     ? car.rentalConditions
     : typeof car.rentalConditions === 'string'
     ? car.rentalConditions.split('\n').filter((line) => line.trim())
     : [];
 
-  // Combine accessories and functionalities
   const allFeatures = [
     ...(car.accessories || []),
     ...(car.functionalities || []),
@@ -102,7 +98,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
           carId: car.id,
           name: values.name,
           email: values.email,
-          phone: '', // Not in form but required by API
+          phone: '',
           message: values.comment,
         });
 
@@ -122,12 +118,10 @@ export default function CarDetails({ car }: CarDetailsProps) {
     [car.id, storageKey]
   );
 
-  // Extract city and country from address
   const addressParts = car.address.split(',');
   const city = addressParts[1]?.trim() || addressParts[0]?.trim() || '';
   const country = addressParts[2]?.trim() || 'Ukraine';
 
-  // Extract ID from car (might be in different format)
   const carIdMatch = car.id.match(/\d+/);
   const carId = carIdMatch ? carIdMatch[0] : car.id.split('-')[0] || car.id.substring(0, 4);
 
@@ -145,7 +139,6 @@ export default function CarDetails({ car }: CarDetailsProps) {
 
   return (
     <div className={styles.carDetails}>
-      {/* Left Section - Image and Form */}
       <div className={styles.leftSection}>
         <div className={styles.carImageSection}>
           <Image
@@ -187,15 +180,11 @@ export default function CarDetails({ car }: CarDetailsProps) {
         </div>
       </div>
 
-      {/* Right Section - Car Info */}
       <div className={styles.rightSection}>
         <div className={styles.carHeader}>
-          <div className={styles.carTitleRow}>
-            <h1 className={styles.carTitle}>
-              {car.make} {car.model}, {car.year}
-            </h1>
-            <span className={styles.carId}>Id: {carId}</span>
-          </div>
+          <h1 className={styles.carTitle}>
+            {car.make} {car.model}, {car.year}
+          </h1>
         </div>
 
         <div className={styles.carLocation}>

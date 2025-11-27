@@ -17,7 +17,6 @@ export default function CatalogPage() {
   } = useCarsStore();
 
   useEffect(() => {
-    // Load cars on mount without filters first
     const emptyFilters = {
       brand: '',
       price: '',
@@ -25,7 +24,6 @@ export default function CatalogPage() {
       mileageTo: '',
     };
     loadCars(emptyFilters, 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLoadMore = () => {

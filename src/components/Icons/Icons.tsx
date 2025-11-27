@@ -1,13 +1,3 @@
-// Icon components matching the UI kit design
-// 
-// ЩОБ ЗАМІНИТИ ІКОНКИ З FIGMA:
-// 1. Відкрийте Figma і знайдіть потрібну іконку
-// 2. Скопіюйте SVG код (права кнопка → Copy as SVG)
-// 3. Замініть SVG код всередині компонента на код з Figma
-// 4. Зберігайте props (filled, className) для правильної роботи
-// 
-// Детальна інструкція: див. FIGMA_ICONS_GUIDE.md
-
 export const HeartIcon = ({ filled = false, className = '' }: { filled?: boolean; className?: string }) => (
   <svg
     width="24"

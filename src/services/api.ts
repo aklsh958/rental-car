@@ -10,12 +10,9 @@ const api = axios.create({
   },
 });
 
-// Format mileage with spaces (5000 -> 5 000)
 export const formatMileage = (mileage: number): string => {
   return mileage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
-
-// Fetch all cars with optional filters
 export const fetchCars = async (
   filters: Partial<FilterState> = {},
   page: number = 1
@@ -26,53 +23,42 @@ export const fetchCars = async (
       limit: 12,
     };
 
-    // Add filters to params if they exist and are not empty
-    // Try different parameter names that API might expect
     if (filters.brand && filters.brand.trim() !== '') {
-      params.make = filters.brand;
-      // Also try alternative names
-      // params.brand = filters.brand;
-      // params.manufacturer = filters.brand;
+      params.make = filters.brand.trim();
     }
     if (filters.price && filters.price.trim() !== '') {
       const priceNum = Number(filters.price);
       params.rentalPrice = priceNum;
-      // Also try alternative names
-      // params.price = priceNum;
-      // params.maxPrice = priceNum;
     }
     if (filters.mileageFrom && filters.mileageFrom.trim() !== '') {
       params.mileageFrom = Number(filters.mileageFrom);
-      // Also try alternative names
-      // params.minMileage = Number(filters.mileageFrom);
     }
     if (filters.mileageTo && filters.mileageTo.trim() !== '') {
       params.mileageTo = Number(filters.mileageTo);
-      // Also try alternative names
-      // params.maxMileage = Number(filters.mileageTo);
     }
 
-    // Try different endpoints - API might use /cars instead of /api/cars
     let response;
     try {
-      // First try /api/cars
       response = await api.get('/api/cars', { params });
     } catch (error: any) {
       if (error.response?.status === 404) {
-        // If 404, try /cars
         response = await api.get('/cars', { params });
       } else {
         throw error;
       }
     }
-    
-    // Reduced logging for production
     if (process.env.NODE_ENV === 'development') {
+      console.log('API Request params:', params);
       console.log('API response status:', response.status);
-      console.log('Cars found:', response.data?.cars?.length || response.data?.length || 0);
+      console.log('API response data structure:', {
+        isArray: Array.isArray(response.data),
+        hasCars: !!response.data?.cars,
+        hasData: !!response.data?.data,
+        hasItems: !!response.data?.items,
+        carsCount: response.data?.cars?.length || response.data?.length || 0,
+      });
     }
     
-    // API returns data in format: { cars: [...], totalCars: number, page: string, totalPages: number }
     let cars: any[] = [];
     
     if (Array.isArray(response.data)) {
@@ -85,12 +71,22 @@ export const fetchCars = async (
       cars = response.data.items;
     }
     
-    // Map API response to our Car interface
-    // API returns 'brand' but our interface expects 'make'
-    const mappedCars = cars.map((car: any) => ({
-      ...car,
-      make: car.brand || car.make, // Use brand from API or fallback to make
-    }));
+    let mappedCars = cars.map((car: any) => {
+      const imgUrl = car.img || car.image || '';
+      
+      return {
+        ...car,
+        make: car.brand || car.make,
+        img: imgUrl,
+      };
+    });
+    
+    if (filters.brand && filters.brand.trim() !== '') {
+      const brandFilter = filters.brand.trim();
+      mappedCars = mappedCars.filter((car) => 
+        car.make?.toLowerCase() === brandFilter.toLowerCase()
+      );
+    }
     
     return mappedCars;
   } catch (error: any) {
@@ -100,12 +96,10 @@ export const fetchCars = async (
     } else if (error.request) {
       console.error('Request error:', error.request);
     }
-    // Return empty array instead of throwing to prevent app crash
     return [];
   }
 };
 
-// Fetch car by ID
 export const fetchCarById = async (id: string): Promise<Car> => {
   try {
     let response;
@@ -119,7 +113,6 @@ export const fetchCarById = async (id: string): Promise<Car> => {
       }
     }
     
-    // Handle different response formats
     let car: any;
     if (response.data?.data) {
       car = response.data.data;
@@ -129,10 +122,12 @@ export const fetchCarById = async (id: string): Promise<Car> => {
       car = response.data;
     }
     
-    // Map API response - API returns 'brand' but our interface expects 'make'
+    const imgUrl = car.img || car.image || '';
+    
     return {
       ...car,
       make: car.brand || car.make,
+      img: imgUrl,
     };
   } catch (error) {
     console.error('Error fetching car by ID:', error);
@@ -140,7 +135,6 @@ export const fetchCarById = async (id: string): Promise<Car> => {
   }
 };
 
-// Submit rental form
 export const submitRental = async (data: {
   carId: string;
   name: string;
@@ -156,7 +150,6 @@ export const submitRental = async (data: {
         try {
           await api.post('/rentals', data);
         } catch (error2: any) {
-          // If both fail, just log and continue (API might not have this endpoint)
           console.warn('Rental submission endpoint not found, but continuing...');
         }
       } else {
