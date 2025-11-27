@@ -1,73 +1,24 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { Formik, FormikHelpers } from 'formik';
-import * as Yup from 'yup';
-import toast from 'react-hot-toast';
 import { useCarsStore } from '@/store/carsStore';
 import { Car } from '@/types';
-import { formatMileage, submitRental } from '@/services/api';
+import { formatMileage } from '@/services/api';
 import { HeartIcon, LocationPinIcon, CheckIcon, CalendarIcon, CarIcon, FuelIcon, GearIcon } from '@/components/Icons/Icons';
-import BookingFormFields from './BookingFormFields';
+import RentalForm from './RentalForm';
 import styles from './CarDetails.module.css';
 
 interface CarDetailsProps {
   car: Car;
 }
 
-type BookingFormValues = {
-  name: string;
-  email: string;
-  bookingDate: string;
-  comment: string;
-};
-
-const DEFAULT_FORM_VALUES: BookingFormValues = {
-  name: '',
-  email: '',
-  bookingDate: '',
-  comment: '',
-};
-
-const bookingSchema = Yup.object({
-  name: Yup.string()
-    .min(2, 'Enter at least 2 characters')
-    .max(60, 'Too long')
-    .required('Name is required'),
-  email: Yup.string()
-    .email('Enter a valid email')
-    .required('Email is required'),
-  bookingDate: Yup.string().required('Choose a booking date'),
-  comment: Yup.string().max(500, 'Maximum 500 characters'),
-});
-
 export default function CarDetails({ car }: CarDetailsProps) {
   const { favorites, addToFavorites, removeFromFavorites } = useCarsStore();
   const isFavorite = favorites.includes(car.id);
-  const [initialValues, setInitialValues] = useState<BookingFormValues>(DEFAULT_FORM_VALUES);
-  const [isReady, setIsReady] = useState(false);
+  const [isReady] = useState(true);
 
   const storageKey = `booking-form-${car.id}`;
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const saved = window.localStorage.getItem(storageKey);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved) as BookingFormValues;
-        setInitialValues({
-          ...DEFAULT_FORM_VALUES,
-          ...parsed,
-        });
-      } catch (err) {
-        console.warn('Failed to parse saved booking form', err);
-      }
-    }
-
-    setIsReady(true);
-  }, []);
 
   const rentalConditions = Array.isArray(car.rentalConditions)
     ? car.rentalConditions
@@ -87,36 +38,6 @@ export default function CarDetails({ car }: CarDetailsProps) {
       addToFavorites(car.id);
     }
   };
-
-  const handleSubmit = useCallback(
-    async (
-      values: BookingFormValues,
-      helpers: FormikHelpers<BookingFormValues>
-    ) => {
-      try {
-        await submitRental({
-          carId: car.id,
-          name: values.name,
-          email: values.email,
-          phone: '',
-          message: values.comment,
-        });
-
-        helpers.resetForm({ values: DEFAULT_FORM_VALUES });
-        helpers.setSubmitting(false);
-
-        if (typeof window !== 'undefined') {
-          window.localStorage.removeItem(storageKey);
-        }
-
-        toast.success('Your booking has been successfully submitted! We will contact you soon.');
-      } catch (error) {
-        console.error('Error submitting rental:', error);
-        toast.error('Error submitting form. Please try again.');
-      }
-    },
-    [car.id, storageKey]
-  );
 
   const addressParts = car.address.split(',');
   const city = addressParts[1]?.trim() || addressParts[0]?.trim() || '';
@@ -157,27 +78,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
           </button>
         </div>
 
-        <div className={styles.rentalFormSection}>
-          <div className={styles.formHeader}>
-            <h2 className={styles.formTitle}>Book your car now</h2>
-            <p className={styles.formSubtitle}>
-              Stay connected! We are always ready to help you.
-            </p>
-          </div>
-
-          <Formik
-            initialValues={initialValues}
-            enableReinitialize
-            validationSchema={bookingSchema}
-            onSubmit={handleSubmit}
-            validateOnBlur
-            validateOnChange
-          >
-            {(formikProps) => (
-              <BookingFormFields {...formikProps} storageKey={storageKey} />
-            )}
-          </Formik>
-        </div>
+        <RentalForm carId={car.id} storageKey={storageKey} />
       </div>
 
       <div className={styles.rightSection}>

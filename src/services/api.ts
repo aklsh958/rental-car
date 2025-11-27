@@ -28,14 +28,24 @@ export const fetchCars = async (
     }
     if (filters.price && filters.price.trim() !== '') {
       const priceNum = Number(filters.price);
-      params.rentalPrice = priceNum;
+      if (!isNaN(priceNum)) {
+        params.rentalPrice = priceNum;
+      }
     }
     if (filters.mileageFrom && filters.mileageFrom.trim() !== '') {
-      params.mileageFrom = Number(filters.mileageFrom);
+      const mileageFromNum = Number(filters.mileageFrom);
+      if (!isNaN(mileageFromNum)) {
+        params.mileageFrom = mileageFromNum;
+      }
     }
     if (filters.mileageTo && filters.mileageTo.trim() !== '') {
-      params.mileageTo = Number(filters.mileageTo);
+      const mileageToNum = Number(filters.mileageTo);
+      if (!isNaN(mileageToNum)) {
+        params.mileageTo = mileageToNum;
+      }
     }
+
+    console.log('fetchCars: Request params', params);
 
     let response;
     try {
@@ -72,7 +82,19 @@ export const fetchCars = async (
     }
     
     const mappedCars = cars.map((car: any) => {
-      const imgUrl = car.img || car.image || '';
+      let imgUrl = car.img || car.image || '';
+      
+      if (imgUrl && !imgUrl.startsWith('http')) {
+        if (imgUrl.startsWith('//')) {
+          imgUrl = `https:${imgUrl}`;
+        } else {
+          imgUrl = `https://ac.goit.global/car-rental-task/${imgUrl.replace(/^\//, '')}`;
+        }
+      }
+      
+      if (!imgUrl) {
+        imgUrl = '/placeholder-car.jpg';
+      }
       
       return {
         ...car,
@@ -80,6 +102,15 @@ export const fetchCars = async (
         img: imgUrl,
       };
     });
+
+    console.log('fetchCars: Mapped cars count', mappedCars.length);
+    if (mappedCars.length > 0) {
+      console.log('fetchCars: First car sample', {
+        id: mappedCars[0].id,
+        make: mappedCars[0].make,
+        img: mappedCars[0].img,
+      });
+    }
     
     return mappedCars;
   } catch (error: any) {
@@ -115,7 +146,19 @@ export const fetchCarById = async (id: string): Promise<Car> => {
       car = response.data;
     }
     
-    const imgUrl = car.img || car.image || '';
+    let imgUrl = car.img || car.image || '';
+    
+    if (imgUrl && !imgUrl.startsWith('http')) {
+      if (imgUrl.startsWith('//')) {
+        imgUrl = `https:${imgUrl}`;
+      } else {
+        imgUrl = `https://ac.goit.global/car-rental-task/${imgUrl.replace(/^\//, '')}`;
+      }
+    }
+    
+    if (!imgUrl) {
+      imgUrl = '/placeholder-car.jpg';
+    }
     
     return {
       ...car,

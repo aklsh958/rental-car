@@ -42,8 +42,6 @@ export default function CatalogPage() {
   return (
     <section className={styles.catalogSection}>
       <div className={`container ${styles.container}`}>
-        <h1 className={styles.pageTitle}>Catalog</h1>
-        
         <SearchFilters />
 
         {shouldShowLoaderOnly && (

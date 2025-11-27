@@ -71,11 +71,15 @@ export const useCarsStore = create<CarsStore>()(
       loadCars: async (filters, page = 1) => {
         const currentFilters = filters || get().filters;
 
+        console.log('loadCars: Called with filters', currentFilters, 'page', page);
+
         set({ filteredCars: [], page: 1, hasMore: true, isLoading: true });
         set({ filters: currentFilters as FilterState });
 
         try {
           const cars = await fetchCars(currentFilters, page);
+
+          console.log('loadCars: Received cars', cars.length);
 
           set({
             filteredCars: cars,

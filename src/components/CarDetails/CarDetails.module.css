@@ -12,15 +12,12 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  position: relative;
 }
 
 .carImageSection {
   position: relative;
   width: 640px;
   height: 512px;
-  top: 152px;
-  left: 120px;
   border-radius: 18.74px;
   overflow: hidden;
   background: #f3f3f3;
@@ -59,14 +56,6 @@
   background: rgba(52, 112, 255, 0.1);
 }
 
-.rentalFormSection {
-  width: 100%;
-  border: 1px solid #dadde1;
-  border-radius: 10px;
-  padding: 32px;
-  max-width: 640px;
-  background: white;
-}
 
 .formHeader {
   margin-bottom: 24px;
@@ -239,15 +228,16 @@
 }
 
 .carTitle {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: 600;
-  color: #121417;
+  color: #101828;
   margin: 0;
   line-height: 1.2;
 }
 
 .carId {
-  font-size: 0.75rem;
+  font-size: 12px;
+  font-weight: 400;
   color: #8e929a;
   line-height: 1.5;
 }
@@ -257,7 +247,7 @@
   align-items: center;
   gap: 6px;
   font-size: 16px;
-  color: #121417;
+  color: #101828;
   margin-bottom: 4px;
   line-height: 1.5;
 }
@@ -269,13 +259,13 @@
 
 .carMileage {
   font-size: 16px;
-  color: #121417;
+  color: #101828;
   margin-bottom: 8px;
   line-height: 1.5;
 }
 
 .carPrice {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: 600;
   color: #3470ff;
   margin-bottom: 24px;
@@ -286,7 +276,7 @@
   margin-bottom: 24px;
   font-size: 16px;
   line-height: 1.43;
-  color: #121417;
+  color: #101828;
 }
 
 .description p {
@@ -302,10 +292,9 @@
 .sectionTitle {
   font-size: 20px;
   font-weight: 600;
-  margin-bottom: 14px;
-  color: #121417;
-  line-height: 1.43;
-  text-transform: none;
+  margin-bottom: 16px;
+  color: #101828;
+  line-height: 1.2;
 }
 
 .conditionsList,
@@ -347,7 +336,7 @@
   align-items: center;
   gap: 8px;
   font-size: 16px;
-  color: #121417;
+  color: #101828;
   line-height: 1.5;
 }
 

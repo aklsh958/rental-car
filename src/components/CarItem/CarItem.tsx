@@ -37,6 +37,11 @@ const CarItem = ({ item }: Props) => {
           width={274}
           height={268}
           className={styles.carImage}
+          style={{ objectFit: 'cover' }}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/placeholder-car.jpg';
+          }}
         />
         <button
           type="button"

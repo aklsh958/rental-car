@@ -84,6 +84,7 @@ export default function SearchFilters() {
       mileageTo: formState.mileageTo || '',
     };
 
+    console.log('SearchFilters: Submitting filters', filters);
     setFilters(filters);
     loadCars(filters, 1);
   };
