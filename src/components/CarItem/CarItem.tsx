@@ -55,7 +55,11 @@ export default function CarItem({ item }: CarItemProps) {
           <h3 className={styles.title}>
             {item.make} {item.model}, {item.year}
           </h3>
-          <p className={styles.price}>{item.rentalPrice}</p>
+          <p className={styles.price}>
+            {typeof item.rentalPrice === 'string' && item.rentalPrice.startsWith('$') 
+              ? item.rentalPrice 
+              : `$${item.rentalPrice}`}
+          </p>
         </div>
         
         <div className={styles.details}>

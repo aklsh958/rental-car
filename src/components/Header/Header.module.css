@@ -1,5 +1,5 @@
 .header {
-  background: white;
+  background: #F2F4F7;
   border-bottom: 1px solid #dadde1;
   padding: 20px 0;
 }
@@ -35,18 +35,18 @@
 
 .navLink {
   font-size: 1rem;
-  color: #8e929a;
+  color: #121417;
   text-decoration: none;
   transition: color 0.3s ease;
   cursor: pointer;
 }
 
 .navLink:hover {
-  color: #3470ff;
+  color: #0B44CD;
 }
 
 .navLink.active {
-  color: #3470ff;
+  color: #0B44CD;
   font-weight: 500;
 }
 

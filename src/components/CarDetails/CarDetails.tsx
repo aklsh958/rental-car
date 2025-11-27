@@ -182,9 +182,12 @@ export default function CarDetails({ car }: CarDetailsProps) {
 
       <div className={styles.rightSection}>
         <div className={styles.carHeader}>
-          <h1 className={styles.carTitle}>
-            {car.make} {car.model}, {car.year}
-          </h1>
+          <div className={styles.carTitleRow}>
+            <h1 className={styles.carTitle}>
+              {car.make} {car.model}, {car.year}
+            </h1>
+            <span className={styles.carId}>Id: {carId}</span>
+          </div>
         </div>
 
         <div className={styles.carLocation}>
@@ -196,7 +199,11 @@ export default function CarDetails({ car }: CarDetailsProps) {
           Mileage: {formatMileage(car.mileage)} km
         </div>
 
-        <div className={styles.carPrice}>{car.rentalPrice}</div>
+        <div className={styles.carPrice}>
+          {typeof car.rentalPrice === 'string' && car.rentalPrice.startsWith('$') 
+            ? car.rentalPrice 
+            : `$${car.rentalPrice}`}
+        </div>
 
         <div className={styles.description}>
           <p>{car.description}</p>
