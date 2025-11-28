@@ -1,25 +1,39 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import styles from './page.module.css';
 
-export default function HomePage() {
+export const metadata: Metadata = {
+  title: 'Find Your Perfect Rental Car',
+  description:
+    'Reliable and budget-friendly car rentals for any journey. Browse our catalog of premium vehicles and find the perfect car for your next trip.',
+  openGraph: {
+    title: 'RentalCar - Premium Car Rentals',
+    description: 'Reliable and budget-friendly car rentals for any journey.',
+    type: 'website',
+  },
+};
+
+export default function Home() {
   return (
-    <main className={styles.homePage}>
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            Find your perfect rental car
-          </h1>
-          <p className={styles.heroSubtitle}>
-            Reliable and budget-friendly rentals for any journey
-          </p>
-          <Link href="/catalog" className={styles.ctaButton}>
+    <section className={styles.hero}>
+      <div className={styles.heroContent}>
+        <h1 className={styles.title}>Find your perfect rental car</h1>
+        <p className={styles.description}>
+          Reliable and budget-friendly rentals for any journey
+        </p>
+
+        <div className={styles.btnContainer}>
+          <Link
+            href="/catalog"
+            className={styles.button}
+            prefetch={false}
+            aria-label="Open the catalog page"
+          >
             View Catalog
           </Link>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }
 
