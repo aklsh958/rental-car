@@ -69,12 +69,17 @@ export const useCarsStore = create<CarsStore>()(
       setHasMore: (hasMore) => set({ hasMore }),
       
       loadCars: async (filters, page = 1) => {
-        const currentFilters = filters || get().filters;
+        const state = get();
+        // Merge partial filters with existing filters to ensure all fields are present
+        const currentFilters: FilterState = {
+          ...state.filters,
+          ...(filters || {}),
+        };
 
         console.log('loadCars: Called with filters', currentFilters, 'page', page);
 
         set({ filteredCars: [], page: 1, hasMore: true, isLoading: true });
-        set({ filters: currentFilters as FilterState });
+        set({ filters: currentFilters });
 
         try {
           const cars = await fetchCars(currentFilters, page);

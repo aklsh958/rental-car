@@ -77,11 +77,12 @@ export default function SearchFilters() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const filters: Partial<FilterState> = {
-      brand: formState.brand || '',
-      price: formState.price || '',
-      mileageFrom: formState.mileageFrom || '',
-      mileageTo: formState.mileageTo || '',
+    // Build complete filters object - empty strings for unused filters
+    const filters: FilterState = {
+      brand: formState.brand && formState.brand.trim() !== '' ? formState.brand.trim() : '',
+      price: formState.price && formState.price.trim() !== '' ? formState.price.trim() : '',
+      mileageFrom: formState.mileageFrom && formState.mileageFrom.trim() !== '' ? formState.mileageFrom.trim() : '',
+      mileageTo: formState.mileageTo && formState.mileageTo.trim() !== '' ? formState.mileageTo.trim() : '',
     };
 
     console.log('SearchFilters: Submitting filters', filters);
