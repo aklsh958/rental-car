@@ -6,71 +6,83 @@
 }
 
 .hero {
-  width: 100%;
-  height: 100vh;
   position: relative;
+  height: 100vh;
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
-  background-image: url('/Picture.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   text-align: left;
+  background: url('/Picture.jpg') center/cover no-repeat;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+  z-index: 1;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+      url('/Picture.jpg') center/cover no-repeat;
+  }
 }
 
 .heroContent {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   text-align: left;
   color: #ffffff;
   max-width: 783px;
   padding: 0 0 152px 120px;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  align-items: flex-start;
 }
 
 .heroTitle {
   font-size: 64px;
   font-weight: 700;
   line-height: 1.1;
-  margin: 0;
-  margin-bottom: 0;
   color: #ffffff;
+  margin: 0;
+  margin-bottom: 16px;
 }
 
 .heroSubtitle {
   font-size: 20px;
-  font-weight: 400;
   line-height: 1.5;
-  margin: 0;
-  margin-bottom: 0;
   color: #ffffff;
+  margin: 0;
+  margin-bottom: 40px;
 }
 
 .ctaButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 48px;
+  border-radius: 12px;
+  padding: 11px 88px;
+  width: 276px;
+  height: 44px;
   background-color: #3470ff;
   color: #ffffff;
-  font-size: 18px;
   font-weight: 600;
-  line-height: 1.33;
-  border-radius: 12px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 16px;
+  line-height: 1.25;
+  box-shadow: 0 12px 30px rgba(11, 68, 205, 0.35);
+  transition: background-color 0.2s ease, transform 0.2s ease;
   cursor: pointer;
   text-decoration: none;
   border: none;
   margin: 0;
-  width: fit-content;
 }
 
-.ctaButton:hover {
+.ctaButton:hover,
+.ctaButton:focus-visible {
   background-color: #0b44cd;
   transform: translateY(-2px);
 }
