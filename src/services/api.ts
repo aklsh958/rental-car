@@ -57,17 +57,16 @@ export const fetchCars = async (
         throw error;
       }
     }
-    if (process.env.NODE_ENV === 'development') {
-      console.log('API Request params:', params);
-      console.log('API response status:', response.status);
-      console.log('API response data structure:', {
-        isArray: Array.isArray(response.data),
-        hasCars: !!response.data?.cars,
-        hasData: !!response.data?.data,
-        hasItems: !!response.data?.items,
-        carsCount: response.data?.cars?.length || response.data?.length || 0,
-      });
-    }
+    
+    console.log('API Request params:', params);
+    console.log('API response status:', response.status);
+    console.log('API response data structure:', {
+      isArray: Array.isArray(response.data),
+      hasCars: !!response.data?.cars,
+      hasData: !!response.data?.data,
+      hasItems: !!response.data?.items,
+      carsCount: response.data?.cars?.length || response.data?.length || 0,
+    });
     
     let cars: any[] = [];
     
@@ -79,6 +78,14 @@ export const fetchCars = async (
       cars = response.data.data;
     } else if (response.data?.items && Array.isArray(response.data.items)) {
       cars = response.data.items;
+    }
+    
+    // Log first few cars from API to check if filtering worked
+    if (cars.length > 0 && filters.brand) {
+      console.log('API returned cars with makes:', cars.slice(0, 5).map((c: any) => ({
+        make: c.make || c.brand,
+        id: c.id,
+      })));
     }
     
     const mappedCars = cars.map((car: any) => {
@@ -103,16 +110,58 @@ export const fetchCars = async (
       };
     });
 
-    console.log('fetchCars: Mapped cars count', mappedCars.length);
-    if (mappedCars.length > 0) {
-      console.log('fetchCars: First car sample', {
-        id: mappedCars[0].id,
-        make: mappedCars[0].make,
-        img: mappedCars[0].img,
+    // Apply client-side filtering as fallback if API doesn't filter correctly
+    let filteredCars = mappedCars;
+    
+    if (filters.brand && filters.brand.trim() !== '') {
+      const brandFilter = filters.brand.trim();
+      filteredCars = filteredCars.filter((car) => {
+        const carMake = (car.make || car.brand || '').trim();
+        return carMake.toLowerCase() === brandFilter.toLowerCase();
       });
     }
     
-    return mappedCars;
+    if (filters.price && filters.price.trim() !== '') {
+      const maxPrice = Number(filters.price);
+      if (!isNaN(maxPrice)) {
+        filteredCars = filteredCars.filter((car) => {
+          const carPrice = Number(car.rentalPrice || car.price || 0);
+          return carPrice <= maxPrice;
+        });
+      }
+    }
+    
+    if (filters.mileageFrom && filters.mileageFrom.trim() !== '') {
+      const minMileage = Number(filters.mileageFrom);
+      if (!isNaN(minMileage)) {
+        filteredCars = filteredCars.filter((car) => {
+          const carMileage = Number(car.mileage || 0);
+          return carMileage >= minMileage;
+        });
+      }
+    }
+    
+    if (filters.mileageTo && filters.mileageTo.trim() !== '') {
+      const maxMileage = Number(filters.mileageTo);
+      if (!isNaN(maxMileage)) {
+        filteredCars = filteredCars.filter((car) => {
+          const carMileage = Number(car.mileage || 0);
+          return carMileage <= maxMileage;
+        });
+      }
+    }
+
+    console.log('fetchCars: Mapped cars count', mappedCars.length);
+    console.log('fetchCars: Filtered cars count', filteredCars.length);
+    if (filteredCars.length > 0) {
+      console.log('fetchCars: First filtered car sample', {
+        id: filteredCars[0].id,
+        make: filteredCars[0].make,
+        img: filteredCars[0].img,
+      });
+    }
+    
+    return filteredCars;
   } catch (error: any) {
     console.error('Error fetching cars:', error);
     if (error.response) {
