@@ -13,84 +13,112 @@ const api = axios.create({
 export const formatMileage = (mileage: number): string => {
   return mileage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
+// Helper function to fetch a single page
+const fetchCarsPage = async (
+  filters: Partial<FilterState>,
+  page: number,
+  limit: number = 12
+): Promise<{ cars: any[], hasMore: boolean }> => {
+  const params: Record<string, string | number> = {
+    page,
+    limit,
+  };
+
+  if (filters.brand && filters.brand.trim() !== '') {
+    params.make = filters.brand.trim();
+  }
+  if (filters.price && filters.price.trim() !== '') {
+    const priceNum = Number(filters.price);
+    if (!isNaN(priceNum)) {
+      params.rentalPrice = priceNum;
+    }
+  }
+  if (filters.mileageFrom && filters.mileageFrom.trim() !== '') {
+    const mileageFromNum = Number(filters.mileageFrom);
+    if (!isNaN(mileageFromNum)) {
+      params.mileageFrom = mileageFromNum;
+    }
+  }
+  if (filters.mileageTo && filters.mileageTo.trim() !== '') {
+    const mileageToNum = Number(filters.mileageTo);
+    if (!isNaN(mileageToNum)) {
+      params.mileageTo = mileageToNum;
+    }
+  }
+
+  let response;
+  try {
+    response = await api.get('/api/cars', { params });
+  } catch (error: any) {
+    if (error.response?.status === 404) {
+      response = await api.get('/cars', { params });
+    } else {
+      throw error;
+    }
+  }
+  
+  let cars: any[] = [];
+  
+  if (Array.isArray(response.data)) {
+    cars = response.data;
+  } else if (response.data?.cars && Array.isArray(response.data.cars)) {
+    cars = response.data.cars;
+  } else if (response.data?.data && Array.isArray(response.data.data)) {
+    cars = response.data.data;
+  } else if (response.data?.items && Array.isArray(response.data.items)) {
+    cars = response.data.items;
+  }
+  
+  return { cars, hasMore: cars.length >= limit };
+};
+
 export const fetchCars = async (
   filters: Partial<FilterState> = {},
   page: number = 1
 ): Promise<Car[]> => {
   try {
-    const params: Record<string, string | number> = {
-      page,
-      limit: 12,
-    };
+    // If filtering by brand, load multiple pages to find all matching cars
+    const hasBrandFilter = filters.brand && filters.brand.trim() !== '';
+    
+    if (hasBrandFilter && page === 1) {
+      // Load multiple pages when filtering by brand
+      const allCars: any[] = [];
+      let currentPage = 1;
+      let hasMore = true;
+      const maxPages = 10; // Limit to prevent infinite loops
+      
+      while (hasMore && currentPage <= maxPages) {
+        const { cars, hasMore: pageHasMore } = await fetchCarsPage(filters, currentPage, 12);
+        allCars.push(...cars);
+        hasMore = pageHasMore && cars.length > 0;
+        currentPage++;
+        
+        // If we found cars and they match the filter, we can stop early
+        if (cars.length < 12) {
+          hasMore = false;
+        }
+      }
+      
+      return processCars(allCars, filters);
+    }
+    
+    // Normal pagination for non-brand filters
+    const { cars } = await fetchCarsPage(filters, page, 12);
+    return processCars(cars, filters);
+  } catch (error: any) {
+    console.error('Error fetching cars:', error);
+    if (error.response) {
+      console.error('Response error:', error.response.status, error.response.data);
+    } else if (error.request) {
+      console.error('Request error:', error.request);
+    }
+    return [];
+  }
+};
 
-    if (filters.brand && filters.brand.trim() !== '') {
-      params.make = filters.brand.trim();
-    }
-    if (filters.price && filters.price.trim() !== '') {
-      const priceNum = Number(filters.price);
-      if (!isNaN(priceNum)) {
-        params.rentalPrice = priceNum;
-      }
-    }
-    if (filters.mileageFrom && filters.mileageFrom.trim() !== '') {
-      const mileageFromNum = Number(filters.mileageFrom);
-      if (!isNaN(mileageFromNum)) {
-        params.mileageFrom = mileageFromNum;
-      }
-    }
-    if (filters.mileageTo && filters.mileageTo.trim() !== '') {
-      const mileageToNum = Number(filters.mileageTo);
-      if (!isNaN(mileageToNum)) {
-        params.mileageTo = mileageToNum;
-      }
-    }
-
-    console.log('fetchCars: Request params', params);
-
-    let response;
-    try {
-      response = await api.get('/api/cars', { params });
-    } catch (error: any) {
-      if (error.response?.status === 404) {
-        response = await api.get('/cars', { params });
-      } else {
-        throw error;
-      }
-    }
-    
-    console.log('API Request params:', params);
-    console.log('API response status:', response.status);
-    console.log('API response data structure:', {
-      isArray: Array.isArray(response.data),
-      hasCars: !!response.data?.cars,
-      hasData: !!response.data?.data,
-      hasItems: !!response.data?.items,
-      carsCount: response.data?.cars?.length || response.data?.length || 0,
-    });
-    
-    let cars: any[] = [];
-    
-    if (Array.isArray(response.data)) {
-      cars = response.data;
-    } else if (response.data?.cars && Array.isArray(response.data.cars)) {
-      cars = response.data.cars;
-    } else if (response.data?.data && Array.isArray(response.data.data)) {
-      cars = response.data.data;
-    } else if (response.data?.items && Array.isArray(response.data.items)) {
-      cars = response.data.items;
-    }
-    
-    // Log first few cars from API to check if filtering worked
-    if (cars.length > 0 && filters.brand) {
-      console.log('API returned cars with makes:', cars.slice(0, 5).map((c: any) => ({
-        make: c.make,
-        brand: c.brand,
-        makeOrBrand: c.make || c.brand,
-        id: c.id,
-      })));
-    }
-    
-    const mappedCars = cars.map((car: any) => {
+// Helper function to process and filter cars
+const processCars = (cars: any[], filters: Partial<FilterState>): Car[] => {
+  const mappedCars = cars.map((car: any) => {
       let imgUrl = car.img || car.image || '';
       
       if (imgUrl && !imgUrl.startsWith('http')) {
@@ -172,26 +200,17 @@ export const fetchCars = async (
       }
     }
 
-    console.log('fetchCars: Mapped cars count', mappedCars.length);
-    console.log('fetchCars: Filtered cars count', filteredCars.length);
-    if (filteredCars.length > 0) {
-      console.log('fetchCars: First filtered car sample', {
-        id: filteredCars[0].id,
-        make: filteredCars[0].make,
-        img: filteredCars[0].img,
-      });
-    }
-    
-    return filteredCars;
-  } catch (error: any) {
-    console.error('Error fetching cars:', error);
-    if (error.response) {
-      console.error('Response error:', error.response.status, error.response.data);
-    } else if (error.request) {
-      console.error('Request error:', error.request);
-    }
-    return [];
+  console.log('processCars: Mapped cars count', mappedCars.length);
+  console.log('processCars: Filtered cars count', filteredCars.length);
+  if (filteredCars.length > 0) {
+    console.log('processCars: First filtered car sample', {
+      id: filteredCars[0].id,
+      make: filteredCars[0].make,
+      img: filteredCars[0].img,
+    });
   }
+  
+  return filteredCars;
 };
 
 export const fetchCarById = async (id: string): Promise<Car> => {
