@@ -83,7 +83,9 @@ export const fetchCars = async (
     // Log first few cars from API to check if filtering worked
     if (cars.length > 0 && filters.brand) {
       console.log('API returned cars with makes:', cars.slice(0, 5).map((c: any) => ({
-        make: c.make || c.brand,
+        make: c.make,
+        brand: c.brand,
+        makeOrBrand: c.make || c.brand,
         id: c.id,
       })));
     }
@@ -103,9 +105,11 @@ export const fetchCars = async (
         imgUrl = '/placeholder-car.jpg';
       }
       
+      const carMake = car.brand || car.make || '';
       return {
         ...car,
-        make: car.brand || car.make,
+        make: carMake,
+        brand: car.brand || carMake, // Keep original brand field
         img: imgUrl,
       };
     });
@@ -114,11 +118,28 @@ export const fetchCars = async (
     let filteredCars = mappedCars;
     
     if (filters.brand && filters.brand.trim() !== '') {
-      const brandFilter = filters.brand.trim();
+      const brandFilter = filters.brand.trim().toLowerCase();
+      console.log('Filtering by brand:', brandFilter);
+      console.log('Sample car makes before filtering:', mappedCars.slice(0, 5).map(c => ({
+        make: c.make,
+        brand: c.brand,
+        makeLower: (c.make || '').toLowerCase(),
+        brandLower: (c.brand || '').toLowerCase(),
+        id: c.id
+      })));
+      
       filteredCars = filteredCars.filter((car) => {
-        const carMake = (car.make || car.brand || '').trim();
-        return carMake.toLowerCase() === brandFilter.toLowerCase();
+        const carMake = (car.make || car.brand || '').trim().toLowerCase();
+        const matches = carMake === brandFilter;
+        return matches;
       });
+      
+      console.log('After brand filtering:', filteredCars.length, 'cars');
+      if (filteredCars.length === 0 && mappedCars.length > 0) {
+        const allMakes = Array.from(new Set(mappedCars.map(c => (c.make || c.brand || '').trim())));
+        console.log('No cars matched filter. Available makes:', allMakes);
+        console.log('Looking for:', brandFilter);
+      }
     }
     
     if (filters.price && filters.price.trim() !== '') {
