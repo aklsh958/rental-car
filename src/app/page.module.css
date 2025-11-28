@@ -2,10 +2,10 @@
   position: relative;
   height: 100vh;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  text-align: left;
+  justify-content: center;
+  text-align: center;
   background: url('/Picture.jpg') center/cover no-repeat;
+  padding-top: 436px;
 }
 
 .hero::before {
@@ -29,11 +29,6 @@
 .heroContent {
   position: relative;
   z-index: 2;
-  text-align: left;
-  color: #ffffff;
-  max-width: 783px;
-  padding: 0 0 152px 120px;
-  margin: 0;
 }
 
 .title {
@@ -55,13 +50,10 @@
 
 .btnContainer {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 12px;
   padding: 11px 88px;
   width: 276px;
@@ -73,10 +65,6 @@
   line-height: 1.25;
   box-shadow: 0 12px 30px rgba(11, 68, 205, 0.35);
   transition: background-color 0.2s ease, transform 0.2s ease;
-  cursor: pointer;
-  text-decoration: none;
-  border: none;
-  margin: 0;
 }
 
 .button:hover,
@@ -85,20 +73,6 @@
   transform: translateY(-2px);
 }
 
-@media (max-width: 1440px) {
-  .heroContent {
-    max-width: 600px;
-    padding: 0 0 120px 80px;
-  }
-
-  .title {
-    font-size: 48px;
-  }
-
-  .description {
-    font-size: 18px;
-  }
-}
 
 @media (max-width: 768px) {
   .hero {

@@ -303,21 +303,18 @@
   padding: 0;
   margin: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
 }
 
 .conditionsList li,
 .featuresList li {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
   font-size: 16px;
-  color: #363535;
-  padding: 7px 14px;
-  background: #f9f9f9;
-  border-radius: 35px;
-  white-space: nowrap;
+  color: #101828;
+  line-height: 1.5;
 }
 
 .checkIcon {
