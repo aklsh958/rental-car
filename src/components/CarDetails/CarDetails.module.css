@@ -1,31 +1,33 @@
 .carDetails {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  padding: 84px 0 104px;
+  background-color: #ffffff;
   max-width: 1400px;
   margin: 0 auto;
-  background: transparent;
-  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 72px;
 }
 
 .leftSection {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 40px;
+  width: 100%;
+  max-width: 640px;
+  flex-shrink: 0;
 }
 
 .carImageSection {
   position: relative;
-  width: 640px;
-  height: 512px;
-  border-radius: 18.74px;
+  border-radius: 19px;
   overflow: hidden;
-  background: #f3f3f3;
+  width: 100%;
 }
 
 .carImage {
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
   object-fit: cover;
   position: relative !important;
 }
@@ -210,73 +212,82 @@
 }
 
 .rightSection {
+  flex: 1;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 68px;
 }
 
 .carHeader {
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 .carTitleRow {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .carTitle {
-  font-size: 24px;
   font-weight: 600;
+  font-size: 24px;
+  line-height: 1.33;
   color: #101828;
   margin: 0;
-  line-height: 1.2;
 }
 
 .carId {
-  font-size: 12px;
-  font-weight: 400;
-  color: #8e929a;
-  line-height: 1.5;
+  font-size: 14px;
+  color: #8d929a;
+  font-weight: 600;
+  margin: 0;
 }
 
-.carLocation {
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+.carLocation,
+.carMileage {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  font-weight: 500;
   font-size: 16px;
+  line-height: 1.25;
   color: #101828;
-  margin-bottom: 4px;
-  line-height: 1.5;
+  margin: 0;
 }
 
 .locationIcon {
-  color: #8e929a;
+  width: 16px;
+  height: 16px;
+  color: #3470ff;
   flex-shrink: 0;
 }
 
-.carMileage {
-  font-size: 16px;
-  color: #101828;
-  margin-bottom: 8px;
-  line-height: 1.5;
-}
-
 .carPrice {
-  font-size: 24px;
   font-weight: 600;
+  font-size: 24px;
+  line-height: 1.33;
   color: #3470ff;
+  margin: 0;
   margin-bottom: 24px;
-  line-height: 1.2;
 }
 
 .description {
-  margin-bottom: 24px;
+  font-weight: 500;
   font-size: 16px;
-  line-height: 1.43;
+  line-height: 1.25;
   color: #101828;
+  margin: 0;
 }
 
 .description p {
@@ -286,15 +297,18 @@
 .rentalConditions,
 .carSpecifications,
 .accessoriesSection {
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0;
 }
 
 .sectionTitle {
-  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 16px;
-  color: #101828;
+  font-size: 20px;
   line-height: 1.2;
+  color: #101828;
+  margin: 0;
 }
 
 .conditionsList,
@@ -304,51 +318,80 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
 .conditionsList li,
 .featuresList li {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  font-weight: 500;
   font-size: 16px;
+  line-height: 1.25;
   color: #101828;
-  line-height: 1.5;
 }
 
 .checkIcon {
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
-  color: #10b981;
+  color: #101828;
 }
 
 .specsGrid {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 16px;
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
 }
 
 .specItem {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-weight: 500;
   font-size: 16px;
+  line-height: 1.25;
   color: #101828;
-  line-height: 1.5;
 }
 
 .specIcon {
-  color: #8e929a;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
+  color: #101828;
+}
+
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 84px 0;
+}
+
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 84px 0;
+  text-align: center;
+  color: #b42318;
+  font-weight: 600;
 }
 
 @media (max-width: 1024px) {
   .carDetails {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     padding: 24px;
+    gap: 40px;
   }
   
-  .specsGrid {
-    grid-template-columns: 1fr;
+  .leftSection {
+    max-width: 100%;
   }
 }

@@ -91,13 +91,14 @@ export default function CarDetails({ car }: CarDetailsProps) {
           </div>
         </div>
 
-        <div className={styles.carLocation}>
-          <LocationPinIcon className={styles.locationIcon} />
-          <span>{city}, {country}</span>
-        </div>
-
-        <div className={styles.carMileage}>
-          Mileage: {formatMileage(car.mileage)} km
+        <div className={styles.metaRow}>
+          <div className={styles.carLocation}>
+            <LocationPinIcon className={styles.locationIcon} />
+            <span>{city}, {country}</span>
+          </div>
+          <div className={styles.carMileage}>
+            Mileage: {formatMileage(car.mileage)} km
+          </div>
         </div>
 
         <div className={styles.carPrice}>
