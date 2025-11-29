@@ -2,7 +2,7 @@
   font-weight: 500;
   font-size: 16px;
   line-height: 1.25;
-  transition: color 0.3s ease;
+  transition: color 0.3s;
   color: #101828;
   text-decoration: none;
 }
@@ -12,6 +12,6 @@
 }
 
 .active {
-  color: #3470ff;
+  color: #0b44cd;
 }
 

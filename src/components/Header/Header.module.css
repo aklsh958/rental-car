@@ -14,12 +14,6 @@
   align-items: center;
 }
 
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .navigation {
   display: flex;
   gap: 32px;
