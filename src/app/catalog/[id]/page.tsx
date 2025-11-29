@@ -24,7 +24,7 @@ export default function CarDetailsPage() {
     if (id) {
       loadCar();
     }
-  }, [id]);
+  }, [id, getCarById]);
 
   if (isLoading) {
     return (

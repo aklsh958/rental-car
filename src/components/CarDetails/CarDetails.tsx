@@ -76,7 +76,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
               <Image
                 className={styles.image}
                 src={car.img || '/placeholder-car.jpg'}
-                alt={`${car.make || car.brand} ${car.model}`}
+                alt={`${car.make} ${car.model}`}
                 width={640}
                 height={512}
                 priority
@@ -97,7 +97,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
           <div className={styles.infoPanel}>
             <div className={styles.titleRow}>
               <h1 className={styles.carTitle}>
-                {car.make || car.brand} {car.model}, {car.year}
+                {car.make} {car.model}, {car.year}
               </h1>
 
               <div className={styles.metaRow}>
