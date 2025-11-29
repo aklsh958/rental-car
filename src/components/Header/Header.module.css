@@ -8,7 +8,7 @@
   z-index: 10;
 }
 
-.header > .container {
+.header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
