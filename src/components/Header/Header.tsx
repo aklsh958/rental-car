@@ -12,8 +12,8 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={`container ${styles.headerContainer}`}>
-        <Link href="/" aria-label="Home">
-          <Image src="/Logo.svg" alt="Logo" width={104} height={16} />
+        <Link href="/" aria-label="Home" className={styles.logoLink}>
+          <Image src="/Logo.svg" alt="RentalCar Logo" width={104} height={16} priority />
         </Link>
         <nav aria-label="Main Navigation">
           <ul className={styles.navigation}>

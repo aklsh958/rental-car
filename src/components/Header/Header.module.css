@@ -11,12 +11,18 @@
 .headerContainer {
   display: flex !important;
   flex-direction: row !important;
+  justify-content: space-between !important;
   align-items: center !important;
-  gap: 960px;
+  width: 100%;
 }
 
 .headerContainer > nav {
   margin-right: 120px;
+}
+
+.logoLink {
+  flex-shrink: 0;
+  display: inline-block;
 }
 
 .navigation {
