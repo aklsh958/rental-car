@@ -11,8 +11,12 @@
 .headerContainer {
   display: flex !important;
   flex-direction: row !important;
-  justify-content: space-between !important;
   align-items: center !important;
+  gap: 960px;
+}
+
+.headerContainer > nav {
+  margin-right: 120px;
 }
 
 .navigation {
@@ -22,6 +26,4 @@
   margin: 0;
   padding: 0;
 }
-
-/* Navigation links styling */
 

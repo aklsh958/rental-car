@@ -70,21 +70,16 @@ export const useCarsStore = create<CarsStore>()(
       
       loadCars: async (filters, page = 1) => {
         const state = get();
-        // Merge partial filters with existing filters to ensure all fields are present
         const currentFilters: FilterState = {
           ...state.filters,
           ...(filters || {}),
         };
-
-        console.log('loadCars: Called with filters', currentFilters, 'page', page);
 
         set({ filteredCars: [], page: 1, hasMore: true, isLoading: true });
         set({ filters: currentFilters });
 
         try {
           const cars = await fetchCars(currentFilters, page);
-
-          console.log('loadCars: Received cars', cars.length);
 
           set({
             filteredCars: cars,
@@ -94,7 +89,6 @@ export const useCarsStore = create<CarsStore>()(
             isLoading: false,
           });
         } catch (error) {
-          console.error('Error loading cars:', error);
           set({ isLoading: false, filteredCars: [] });
         }
       },
@@ -118,7 +112,6 @@ export const useCarsStore = create<CarsStore>()(
             isLoading: false,
           }));
         } catch (error) {
-          console.error('Error loading more cars:', error);
           set({ isLoading: false });
         }
       },
@@ -128,7 +121,6 @@ export const useCarsStore = create<CarsStore>()(
           const car = await fetchCarById(id);
           return car;
         } catch (error) {
-          console.error('Error fetching car:', error);
           return null;
         }
       },

@@ -77,7 +77,6 @@ export default function SearchFilters() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Build complete filters object - empty strings for unused filters
     const filters: FilterState = {
       brand: formState.brand && formState.brand.trim() !== '' ? formState.brand.trim() : '',
       price: formState.price && formState.price.trim() !== '' ? formState.price.trim() : '',
@@ -85,7 +84,6 @@ export default function SearchFilters() {
       mileageTo: formState.mileageTo && formState.mileageTo.trim() !== '' ? formState.mileageTo.trim() : '',
     };
 
-    console.log('SearchFilters: Submitting filters', filters);
     setFilters(filters);
     loadCars(filters, 1);
   };

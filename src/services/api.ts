@@ -13,7 +13,7 @@ const api = axios.create({
 export const formatMileage = (mileage: number): string => {
   return mileage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
-// Helper function to fetch a single page
+
 const fetchCarsPage = async (
   filters: Partial<FilterState>,
   page: number,
@@ -77,15 +77,13 @@ export const fetchCars = async (
   page: number = 1
 ): Promise<Car[]> => {
   try {
-    // If filtering by brand, load multiple pages to find all matching cars
     const hasBrandFilter = filters.brand && filters.brand.trim() !== '';
     
     if (hasBrandFilter && page === 1) {
-      // Load multiple pages when filtering by brand
       const allCars: any[] = [];
       let currentPage = 1;
       let hasMore = true;
-      const maxPages = 10; // Limit to prevent infinite loops
+      const maxPages = 10;
       
       while (hasMore && currentPage <= maxPages) {
         const { cars, hasMore: pageHasMore } = await fetchCarsPage(filters, currentPage, 12);
@@ -93,7 +91,6 @@ export const fetchCars = async (
         hasMore = pageHasMore && cars.length > 0;
         currentPage++;
         
-        // If we found cars and they match the filter, we can stop early
         if (cars.length < 12) {
           hasMore = false;
         }
@@ -102,21 +99,13 @@ export const fetchCars = async (
       return processCars(allCars, filters);
     }
     
-    // Normal pagination for non-brand filters
     const { cars } = await fetchCarsPage(filters, page, 12);
     return processCars(cars, filters);
   } catch (error: any) {
-    console.error('Error fetching cars:', error);
-    if (error.response) {
-      console.error('Response error:', error.response.status, error.response.data);
-    } else if (error.request) {
-      console.error('Request error:', error.request);
-    }
     return [];
   }
 };
 
-// Helper function to process and filter cars
 const processCars = (cars: any[], filters: Partial<FilterState>): Car[] => {
   const mappedCars = cars.map((car: any) => {
       let imgUrl = car.img || car.image || '';
@@ -137,37 +126,20 @@ const processCars = (cars: any[], filters: Partial<FilterState>): Car[] => {
       return {
         ...car,
         make: carMake,
-        brand: car.brand || carMake, // Keep original brand field
+        brand: car.brand || carMake,
         img: imgUrl,
       };
     });
 
-    // Apply client-side filtering as fallback if API doesn't filter correctly
     let filteredCars = mappedCars;
     
     if (filters.brand && filters.brand.trim() !== '') {
       const brandFilter = filters.brand.trim().toLowerCase();
-      console.log('Filtering by brand:', brandFilter);
-      console.log('Sample car makes before filtering:', mappedCars.slice(0, 5).map(c => ({
-        make: c.make,
-        brand: c.brand,
-        makeLower: (c.make || '').toLowerCase(),
-        brandLower: (c.brand || '').toLowerCase(),
-        id: c.id
-      })));
       
       filteredCars = filteredCars.filter((car) => {
         const carMake = (car.make || car.brand || '').trim().toLowerCase();
-        const matches = carMake === brandFilter;
-        return matches;
+        return carMake === brandFilter;
       });
-      
-      console.log('After brand filtering:', filteredCars.length, 'cars');
-      if (filteredCars.length === 0 && mappedCars.length > 0) {
-        const allMakes = Array.from(new Set(mappedCars.map(c => (c.make || c.brand || '').trim())));
-        console.log('No cars matched filter. Available makes:', allMakes);
-        console.log('Looking for:', brandFilter);
-      }
     }
     
     if (filters.price && filters.price.trim() !== '') {
@@ -199,16 +171,6 @@ const processCars = (cars: any[], filters: Partial<FilterState>): Car[] => {
         });
       }
     }
-
-  console.log('processCars: Mapped cars count', mappedCars.length);
-  console.log('processCars: Filtered cars count', filteredCars.length);
-  if (filteredCars.length > 0) {
-    console.log('processCars: First filtered car sample', {
-      id: filteredCars[0].id,
-      make: filteredCars[0].make,
-      img: filteredCars[0].img,
-    });
-  }
   
   return filteredCars;
 };
@@ -255,7 +217,6 @@ export const fetchCarById = async (id: string): Promise<Car> => {
       img: imgUrl,
     };
   } catch (error) {
-    console.error('Error fetching car by ID:', error);
     throw error;
   }
 };
@@ -275,14 +236,12 @@ export const submitRental = async (data: {
         try {
           await api.post('/rentals', data);
         } catch (error2: any) {
-          console.warn('Rental submission endpoint not found, but continuing...');
         }
       } else {
         throw error;
       }
     }
   } catch (error) {
-    console.error('Error submitting rental:', error);
     throw error;
   }
 };

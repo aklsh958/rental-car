@@ -112,7 +112,6 @@ const RentalForm = ({ carId, storageKey }: Props) => {
           setFormData({ ...emptyFormData, ...parsed });
         });
       } catch (err) {
-        console.warn('Failed to load saved form data', err);
       }
     }
 
@@ -148,7 +147,6 @@ const RentalForm = ({ carId, storageKey }: Props) => {
           'Your booking has been successfully submitted! We will contact you soon.'
         );
       } catch (err) {
-        console.error('Failed to submit rental request:', err);
         toast.error('Error submitting form. Please try again.');
       }
     },
