@@ -15,6 +15,11 @@
   align-items: center;
 }
 
+.header .container nav {
+  display: flex;
+  align-items: center;
+}
+
 .navigation {
   display: flex;
   gap: 24px;
