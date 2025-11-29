@@ -20,17 +20,6 @@ export default function CarDetails({ car }: CarDetailsProps) {
 
   const storageKey = `booking-form-${car.id}`;
 
-  const rentalConditions = Array.isArray(car.rentalConditions)
-    ? car.rentalConditions
-    : typeof car.rentalConditions === 'string'
-    ? car.rentalConditions.split('\n').filter((line) => line.trim())
-    : [];
-
-  const allFeatures = [
-    ...(car.accessories || []),
-    ...(car.functionalities || []),
-  ];
-
   const handleFavoriteClick = () => {
     if (isFavorite) {
       removeFromFavorites(car.id);
@@ -39,12 +28,32 @@ export default function CarDetails({ car }: CarDetailsProps) {
     }
   };
 
-  const addressParts = car.address.split(',');
-  const city = addressParts[1]?.trim() || addressParts[0]?.trim() || '';
-  const country = addressParts[2]?.trim() || 'Ukraine';
+  const addressParts = car.address?.split(', ') ?? [];
+  const city = addressParts.slice(1, -1).join(', ');
+  const country = addressParts.slice(-1).join('');
+  const location = [city, country].filter(Boolean).join(', ');
+  const mileageFormatted = `${formatMileage(car.mileage)} km`;
 
-  const carIdMatch = car.id.match(/\d+/);
-  const carId = carIdMatch ? carIdMatch[0] : car.id.split('-')[0] || car.id.substring(0, 4);
+  const rentalConditions = (Array.isArray(car.rentalConditions)
+    ? car.rentalConditions
+    : typeof car.rentalConditions === 'string'
+    ? car.rentalConditions.split('\n').filter((line) => line.trim())
+    : []).map((condition) => {
+    const [label, value] = condition.split(':');
+    return {
+      label: label?.trim() || condition,
+      value: value ? value.trim() : null,
+    };
+  });
+
+  const specifications = [
+    { label: 'Year', value: car.year, icon: CalendarIcon },
+    { label: 'Type', value: car.type, icon: CarIcon },
+    { label: 'Fuel Consumption', value: `${car.fuelConsumption}`, icon: FuelIcon },
+    { label: 'Engine Size', value: car.engineSize, icon: GearIcon },
+  ];
+
+  const accessories = [...(car.accessories || []), ...(car.functionalities || [])];
 
   if (!isReady) {
     return (
@@ -59,110 +68,116 @@ export default function CarDetails({ car }: CarDetailsProps) {
   }
 
   return (
-    <div className={styles.carDetails}>
-      <div className={styles.leftSection}>
-        <div className={styles.carImageSection}>
-          <Image
-            src={car.img || '/placeholder-car.jpg'}
-            alt={`${car.make} ${car.model}`}
-            fill
-            className={styles.carImage}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
-          <button
-            onClick={handleFavoriteClick}
-            className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
-            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-          >
-            <HeartIcon filled={isFavorite} />
-          </button>
-        </div>
+    <section className={styles.carDetails}>
+      <div className="container">
+        <div className={styles.detailsWrapper}>
+          <div className={styles.mediaColumn}>
+            <div className={styles.imageWrapper}>
+              <Image
+                className={styles.image}
+                src={car.img || '/placeholder-car.jpg'}
+                alt={`${car.make || car.brand} ${car.model}`}
+                width={640}
+                height={512}
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
+              />
+              <button
+                onClick={handleFavoriteClick}
+                className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
+                aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <HeartIcon filled={isFavorite} />
+              </button>
+            </div>
 
-        <RentalForm carId={car.id} storageKey={storageKey} />
+            <RentalForm carId={car.id} storageKey={storageKey} />
+          </div>
+
+          <div className={styles.infoPanel}>
+            <div className={styles.titleRow}>
+              <h1 className={styles.carTitle}>
+                {car.make || car.brand} {car.model}, {car.year}
+              </h1>
+
+              <div className={styles.metaRow}>
+                <span className={styles.metaItem}>
+                  <LocationPinIcon className={styles.metaIcon} />
+                  {location}
+                </span>
+                <span className={styles.metaItem}>
+                  Mileage: {mileageFormatted}
+                </span>
+              </div>
+              <p className={styles.price}>
+                {typeof car.rentalPrice === 'string' && car.rentalPrice.startsWith('$') 
+                  ? car.rentalPrice 
+                  : `$${car.rentalPrice}`}
+              </p>
+              <p className={styles.description}>{car.description}</p>
+            </div>
+
+            <div className={styles.mainDesc}>
+              {rentalConditions.length > 0 && (
+                <div className={styles.wrapper}>
+                  <h3 className={styles.wrapperTitle}>Rental Conditions:</h3>
+                  <ul className={styles.conditionsList}>
+                    {rentalConditions.map((condition, index) => (
+                      <li
+                        className={styles.conditionItem}
+                        key={`${condition.label}-${index}`}
+                      >
+                        <CheckIcon className={styles.conditionIcon} />
+                        <span>
+                          {condition.label}
+                          {condition.value && (
+                            <span className={styles.conditionValue}>
+                              : {condition.value}
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className={styles.wrapper}>
+                <h3 className={styles.wrapperTitle}>Car Specifications:</h3>
+                <ul className={styles.specList}>
+                  {specifications.map((spec) => {
+                    const IconComponent = spec.icon;
+                    return (
+                      <li className={styles.specItem} key={spec.label}>
+                        <IconComponent className={styles.specIcon} />
+                        <span>
+                          {spec.label}: {spec.value}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {accessories.length > 0 && (
+                <div className={styles.wrapper}>
+                  <h3 className={styles.wrapperTitle}>
+                    Accessories and functionalities:
+                  </h3>
+                  <ul className={styles.specList}>
+                    {accessories.map((item) => (
+                      <li className={styles.specItem} key={item}>
+                        <CheckIcon className={styles.specIcon} />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div className={styles.rightSection}>
-        <div className={styles.carHeader}>
-          <div className={styles.carTitleRow}>
-            <h1 className={styles.carTitle}>
-              {car.make} {car.model}, {car.year}
-            </h1>
-            <span className={styles.carId}>Id: {carId}</span>
-          </div>
-        </div>
-
-        <div className={styles.metaRow}>
-          <div className={styles.carLocation}>
-            <LocationPinIcon className={styles.locationIcon} />
-            <span>{city}, {country}</span>
-          </div>
-          <div className={styles.carMileage}>
-            Mileage: {formatMileage(car.mileage)} km
-          </div>
-        </div>
-
-        <div className={styles.carPrice}>
-          {typeof car.rentalPrice === 'string' && car.rentalPrice.startsWith('$') 
-            ? car.rentalPrice 
-            : `$${car.rentalPrice}`}
-        </div>
-
-        <div className={styles.description}>
-          <p>{car.description}</p>
-        </div>
-
-        {rentalConditions.length > 0 && (
-          <div className={styles.rentalConditions}>
-            <h2 className={styles.sectionTitle}>Rental Conditions:</h2>
-            <ul className={styles.conditionsList}>
-              {rentalConditions.map((condition, index) => (
-                <li key={index}>
-                  <CheckIcon className={styles.checkIcon} />
-                  {condition}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <div className={styles.carSpecifications}>
-          <h2 className={styles.sectionTitle}>Car Specifications:</h2>
-          <div className={styles.specsGrid}>
-            <div className={styles.specItem}>
-              <CalendarIcon className={styles.specIcon} />
-              <span>Year: {car.year}</span>
-            </div>
-            <div className={styles.specItem}>
-              <CarIcon className={styles.specIcon} />
-              <span>Type: {car.type}</span>
-            </div>
-            <div className={styles.specItem}>
-              <FuelIcon className={styles.specIcon} />
-              <span>Fuel Consumption: {car.fuelConsumption}</span>
-            </div>
-            <div className={styles.specItem}>
-              <GearIcon className={styles.specIcon} />
-              <span>Engine Size: {car.engineSize}</span>
-            </div>
-          </div>
-        </div>
-
-        {allFeatures.length > 0 && (
-          <div className={styles.accessoriesSection}>
-            <h2 className={styles.sectionTitle}>
-              Accessories and functionalities:
-            </h2>
-            <ul className={styles.featuresList}>
-              {allFeatures.map((feature, index) => (
-                <li key={index}>
-                  <CheckIcon className={styles.checkIcon} />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </div>
+    </section>
   );
 }

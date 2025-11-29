@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useCarsStore } from '@/store/carsStore';
 import CarDetails from '@/components/CarDetails/CarDetails';
-import styles from './page.module.css';
+import carDetailsStyles from '@/components/CarDetails/CarDetails.module.css';
 
 export default function CarDetailsPage() {
   const params = useParams();
@@ -28,34 +28,28 @@ export default function CarDetailsPage() {
 
   if (isLoading) {
     return (
-      <main className={styles.carDetailsPage}>
+      <section className={carDetailsStyles.carDetails}>
         <div className="container">
-          <div className="loader" />
+          <div className={carDetailsStyles.loaderContainer}>
+            <div className="loader" />
+          </div>
         </div>
-      </main>
+      </section>
     );
   }
 
   if (!car) {
     return (
-      <main className={styles.carDetailsPage}>
+      <section className={carDetailsStyles.carDetails}>
         <div className="container">
-          <div className={styles.notFound}>
-            <h2>Car not found</h2>
-            <p>Try selecting another car from the catalog.</p>
+          <div className={carDetailsStyles.errorContainer}>
+            <p>Failed to load car details. Please try again later.</p>
           </div>
         </div>
-      </main>
+      </section>
     );
   }
 
-  return (
-    <main className={styles.carDetailsPage}>
-      <div className="container">
-        <h1 className={styles.pageTitle}>Details</h1>
-        <CarDetails car={car} />
-      </div>
-    </main>
-  );
+  return <CarDetails car={car} />;
 }
 
