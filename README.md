@@ -1,86 +1,86 @@
 # RentalCar - Car Rental Service
 
-## Опис проєкту
+## Project Description
 
-RentalCar - це веб-додаток для оренди автомобілів, розроблений з використанням Next.js та TypeScript. Додаток надає користувачам зручний інтерфейс для перегляду каталогу автомобілів, фільтрації за різними критеріями, додавання до обраних та оформлення оренди.
+RentalCar is a car rental web application built with Next.js and TypeScript. The app provides users with a convenient interface for browsing a catalog of cars, filtering by various criteria, adding to favorites, and booking rentals.
 
-## Основні функції
+## Main Features
 
-- **Домашня сторінка** - банер з основним закликом до дії
-- **Каталог автомобілів** - перегляд всіх доступних транспортних засобів
-- **Фільтрація** - пошук автомобілів за брендом, ціною та пробігом
-- **Обране** - збереження улюблених автомобілів (зберігається при оновленні сторінки)
-- **Детальна інформація** - повний опис автомобіля з усіма характеристиками
-- **Форма оренди** - оформлення оренди автомобіля
-- **Пагінація** - завантаження додаткових карток через кнопку "Load More"
+- **Home Page** - banner with main call-to-action
+- **Car Catalog** - view all available vehicles
+- **Filtering** - search for cars by brand, price, and mileage
+- **Favorites** - save favorite cars (persisted on page refresh)
+- **Detailed Information** - full car description with all specifications
+- **Rental Form** - book a car rental
+- **Pagination** - load additional cards via "Load More" button
 
-## Технології
+## Technologies
 
-- **Next.js 14** - React фреймворк з App Router
-- **TypeScript** - типізація коду
-- **Zustand** - управління глобальним станом
-- **Axios** - HTTP запити до API
-- **CSS Modules** - стилізація компонентів
+- **Next.js 14** - React framework with App Router
+- **TypeScript** - code typing
+- **Zustand** - global state management
+- **Axios** - HTTP requests to API
+- **CSS Modules** - component styling
 
-## Встановлення
+## Installation
 
-1. Клонуйте репозиторій:
+1. Clone the repository:
 ```bash
 git clone <repository-url>
 cd Project
 ```
 
-2. Встановіть залежності:
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Запустіть сервер розробки:
+3. Run the development server:
 ```bash
 npm run dev
 ```
 
-4. Відкрийте браузер за адресою [http://localhost:3000](http://localhost:3000)
+4. Open your browser at [http://localhost:3000](http://localhost:3000)
 
-## Використання
+## Usage
 
-### Домашня сторінка
-На головній сторінці натисніть кнопку "View Catalog" для переходу до каталогу автомобілів.
+### Home Page
+On the main page, click the "View Catalog" button to navigate to the car catalog.
 
-### Каталог
-- Використовуйте фільтри для пошуку автомобілів за брендом, ціною та пробігом
-- Натисніть на іконку серця, щоб додати автомобіль до обраних
-- Натисніть "Read more" для перегляду детальної інформації про автомобіль
-- Використовуйте кнопку "Load More" для завантаження додаткових автомобілів
+### Catalog
+- Use filters to search for cars by brand, price, and mileage
+- Click the heart icon to add a car to favorites
+- Click "Read more" to view detailed information about the car
+- Use the "Load More" button to load additional cars
 
-### Детальна сторінка
-- Перегляньте повну інформацію про автомобіль
-- Заповніть форму оренди та відправте заявку
-- Після успішної відправки з'явиться нотифікація
+### Details Page
+- View complete information about the car
+- Fill out the rental form and submit your request
+- A notification will appear after successful submission
 
-## Структура проєкту
+## Project Structure
 
 ```
 Project/
 ├── src/
-│   ├── app/                    # Next.js App Router сторінки
-│   │   ├── page.tsx            # Домашня сторінка
+│   ├── app/                    # Next.js App Router pages
+│   │   ├── page.tsx            # Home page
 │   │   ├── catalog/
-│   │   │   ├── page.tsx        # Сторінка каталогу
+│   │   │   ├── page.tsx        # Catalog page
 │   │   │   └── [id]/
-│   │   │       └── page.tsx    # Сторінка деталей автомобіля
-│   │   ├── layout.tsx          # Кореневий layout
-│   │   └── globals.css         # Глобальні стилі
-│   ├── components/             # React компоненти
-│   │   ├── CarCard/           # Картка автомобіля
-│   │   ├── CarDetails/        # Детальна інформація про автомобіль
-│   │   └── Filters/           # Компонент фільтрів
+│   │   │       └── page.tsx    # Car details page
+│   │   ├── layout.tsx          # Root layout
+│   │   └── globals.css         # Global styles
+│   ├── components/             # React components
+│   │   ├── CarCard/           # Car card
+│   │   ├── CarDetails/        # Car detailed information
+│   │   └── Filters/           # Filters component
 │   ├── store/                  # Zustand store
-│   │   └── carsStore.ts        # Глобальний стан додатку
-│   ├── services/               # API сервіси
-│   │   └── api.ts              # Axios конфігурація та запити
-│   └── types/                  # TypeScript типи
-│       └── index.ts            # Типи даних
+│   │   └── carsStore.ts        # Global app state
+│   ├── services/               # API services
+│   │   └── api.ts              # Axios configuration and requests
+│   └── types/                  # TypeScript types
+│       └── index.ts            # Data types
 ├── package.json
 ├── tsconfig.json
 └── README.md
@@ -88,22 +88,20 @@ Project/
 
 ## API
 
-Додаток використовує готовий бекенд API:
-- Базовий URL: `https://car-rental-api.goit.global`
-- Документація: https://car-rental-api.goit.global/api-docs/
+The app uses a ready-made backend API:
+- Base URL: `https://car-rental-api.goit.global`
+- Documentation: https://car-rental-api.goit.global/api-docs/
 
-### Основні endpoints:
-- `GET /api/cars` - отримання списку автомобілів з фільтрацією та пагінацією
-- `GET /api/cars/:id` - отримання деталей конкретного автомобіля
-- `POST /api/rentals` - відправка форми оренди
+### Main endpoints:
+- `GET /api/cars` - get list of cars with filtering and pagination
+- `GET /api/cars/:id` - get details of a specific car
+- `POST /api/rentals` - submit rental form
 
-## Особливості реалізації
+## Implementation Features
 
-- **Фільтрація на бекенді** - всі фільтри обробляються на сервері
-- **Пагінація на бекенді** - завантаження додаткових сторінок через API
-- **Персистентність обраних** - список обраних зберігається в localStorage
-- **Форматування пробігу** - відображення з пробілами (5 000 km замість 5000 km)
-- **Loader при завантаженні** - індикатор завантаження для асинхронних запитів
-- **Валідація форми** - перевірка обов'язкових полів перед відправкою
-
-
+- **Backend Filtering** - all filters are processed on the server
+- **Backend Pagination** - loading additional pages via API
+- **Favorites Persistence** - favorites list is saved in localStorage
+- **Mileage Formatting** - displayed with spaces (5 000 km instead of 5000 km)
+- **Loading Indicator** - loading indicator for asynchronous requests
+- **Form Validation** - validation of required fields before submission
