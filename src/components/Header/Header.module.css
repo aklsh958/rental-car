@@ -20,6 +20,10 @@
   gap: 960px;
 }
 
+.headerContainer > nav {
+  margin-right: 0;
+}
+
 .logoLink {
   flex-shrink: 0;
   display: inline-block;
