@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useCarsStore } from '@/store/carsStore';
 import { Car } from '@/types';
 import { formatMileage } from '@/services/api';
-import { HeartIcon, LocationPinIcon, CheckIcon, CalendarIcon, CarIcon, FuelIcon, GearIcon } from '@/components/Icons/Icons';
+import { LocationPinIcon, CheckIcon, CalendarIcon, CarIcon, FuelIcon, GearIcon } from '@/components/Icons/Icons';
 import RentalForm from './RentalForm';
 import styles from './CarDetails.module.css';
 
@@ -14,19 +14,9 @@ interface CarDetailsProps {
 }
 
 export default function CarDetails({ car }: CarDetailsProps) {
-  const { favorites, addToFavorites, removeFromFavorites } = useCarsStore();
-  const isFavorite = favorites.includes(car.id);
   const [isReady] = useState(true);
 
   const storageKey = `booking-form-${car.id}`;
-
-  const handleFavoriteClick = () => {
-    if (isFavorite) {
-      removeFromFavorites(car.id);
-    } else {
-      addToFavorites(car.id);
-    }
-  };
 
   const addressParts = car.address?.split(', ') ?? [];
   const city = addressParts.slice(1, -1).join(', ');
@@ -82,13 +72,6 @@ export default function CarDetails({ car }: CarDetailsProps) {
                 priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
               />
-              <button
-                onClick={handleFavoriteClick}
-                className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
-                aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <HeartIcon filled={isFavorite} />
-              </button>
             </div>
 
             <RentalForm carId={car.id} storageKey={storageKey} />
